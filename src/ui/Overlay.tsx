@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { useNav } from '../state/navigation'
-
-const STATION_NAMES: Record<string, string> = {
-  doors: 'The Doors',
-  rail: 'The Rail',
-}
+import { STATIONS, STATION_ORDER } from '../scene/stations'
 
 export function Overlay() {
   const station = useNav((s) => s.station)
@@ -49,20 +45,30 @@ export function Overlay() {
     setHint(false)
   }, [loaded, doorPhase])
 
-  // Keyboard entry
+  // Keyboard: Enter/Space turn the key; 1–7 fly between stations
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') useNav.getState().enter()
+      const nav = useNav.getState()
+      if (e.key === 'Enter' || e.key === ' ') {
+        nav.enter()
+        return
+      }
+      const n = Number(e.key)
+      if (n >= 1 && n <= STATION_ORDER.length) nav.navigate(STATION_ORDER[n - 1])
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  const index = STATION_ORDER.indexOf(station)
+
   return (
     <>
       <div className={`topbar ${loaded ? 'visible' : ''}`}>
         <span className="wordmark">THE WARDROBE</span>
-        <span className="crumb smallcaps">{STATION_NAMES[station]}</span>
+        <span className="crumb smallcaps">
+          {index + 1} · {STATIONS[station].name}
+        </span>
       </div>
       <div className={`hint smallcaps ${hint ? 'visible' : ''}`}>Turn the key</div>
       <div className={`veil ${veil ? '' : 'lifted'}`} />

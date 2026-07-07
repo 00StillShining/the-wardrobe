@@ -1,11 +1,12 @@
 import * as THREE from 'three'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { RoundedBox, MeshReflectorMaterial } from '@react-three/drei'
+import { RoundedBox, MeshReflectorMaterial, useTexture } from '@react-three/drei'
 import { Spot } from './Spot'
 import { useOak, useWalnutWood, useBrass, usePlaqueTexture } from './materials/woods'
 import { useNav } from '../state/navigation'
-import { settle, clamp01 } from './easing'
+import type { StationId } from './stations'
+import { settle, clamp01, easeCamera } from './easing'
 
 /* ————— dimensions (metres) —————
    The whole cabinet is parameterised from these so panels stay honest. */
@@ -101,6 +102,74 @@ function Hanger({ x, oak, brass }: { x: number; oak: THREE.Material; brass: THRE
   )
 }
 
+/* ————— hotspot plaque — the diegetic navigation ————— */
+
+function Hotspot({
+  station,
+  text,
+  position,
+  rotation = [0, 0, 0],
+  backing,
+}: {
+  station: StationId
+  text: string
+  position: [number, number, number]
+  rotation?: [number, number, number]
+  backing: THREE.Material
+}) {
+  const tex = usePlaqueTexture(text)
+  const hover = useRef(false)
+  const faceMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        map: tex,
+        metalness: 0.85,
+        roughness: 0.42,
+        emissive: new THREE.Color('#ffd9a0'),
+        emissiveIntensity: 0,
+        envMapIntensity: 1.1,
+      }),
+    [tex],
+  )
+
+  useFrame(() => {
+    const nav = useNav.getState()
+    const t = performance.now() / 1000
+    // hover glow, plus a single glint when this station is the destination
+    let target = hover.current ? 0.45 : 0
+    if (nav.station === station) {
+      const dt = t - nav.tStation
+      if (dt < 0.7) target = Math.max(target, Math.sin(clamp01(dt / 0.7) * Math.PI) * 0.9)
+    }
+    faceMat.emissiveIntensity += (target - faceMat.emissiveIntensity) * 0.14
+  })
+
+  return (
+    <group
+      position={position}
+      rotation={rotation}
+      onClick={(e) => {
+        e.stopPropagation()
+        useNav.getState().navigate(station)
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation()
+        hover.current = true
+        if (useNav.getState().doorPhase === 'open') document.body.style.cursor = 'pointer'
+      }}
+      onPointerOut={() => {
+        hover.current = false
+        document.body.style.cursor = 'auto'
+      }}
+    >
+      <RoundedBox args={[0.15, 0.034, 0.008]} radius={0.004} smoothness={4} material={backing} castShadow />
+      <mesh position={[0, 0, 0.0045]} material={faceMat}>
+        <planeGeometry args={[0.138, 0.026]} />
+      </mesh>
+    </group>
+  )
+}
+
 /* ————— door ————— */
 
 interface DoorProps {
@@ -114,6 +183,7 @@ interface DoorProps {
     field: THREE.Material
     brass: THREE.Material
     brassBright: THREE.Material
+    linen: THREE.Material
   }
 }
 
@@ -229,11 +299,12 @@ function Door({ side, doorRef, keyRef, materials }: DoorProps) {
               <boxGeometry args={[mw, mh, 0.008]} />
             </mesh>
           ))}
+          <Hotspot station="mirror" text="THE MIRROR" position={[0, 0.885, 0.016]} backing={materials.brass} />
           <mesh position={[0, 0, 0.008]}>
             <planeGeometry args={[0.48, 1.58]} />
             <MeshReflectorMaterial
               blur={[280, 60]}
-              resolution={512}
+              resolution={1024}
               mixBlur={0.9}
               mixStrength={1.1}
               mirror={0.85}
@@ -252,9 +323,10 @@ function Door({ side, doorRef, keyRef, materials }: DoorProps) {
       {side === 'right' && (
         <group position={[cx, 0.02, -DOOR_T / 2 - 0.006]} rotation={[0, Math.PI, 0]}>
           <RoundedBox args={[0.56, 1.66, 0.012]} radius={0.004} smoothness={4} material={materials.stile} />
+          <Hotspot station="pinboard" text="THE PINBOARD" position={[0, 0.885, 0.016]} backing={materials.brass} />
           <mesh position={[0, 0, 0.008]}>
             <planeGeometry args={[0.5, 1.6]} />
-            <meshStandardMaterial color="#cbbda2" roughness={0.96} />
+            <primitive object={materials.linen} attach="material" />
           </mesh>
           {(
             [
@@ -283,6 +355,7 @@ function Choreography({
   picL,
   picR,
   cavityFill,
+  drawer,
 }: {
   doorL: React.MutableRefObject<THREE.Group | null>
   doorR: React.MutableRefObject<THREE.Group | null>
@@ -290,12 +363,26 @@ function Choreography({
   picL: React.MutableRefObject<THREE.SpotLight | null>
   picR: React.MutableRefObject<THREE.SpotLight | null>
   cavityFill: React.MutableRefObject<THREE.PointLight | null>
+  drawer: React.MutableRefObject<THREE.Group | null>
 }) {
   const flightFired = useRef(false)
+  const prevStation = useRef<StationId>(useNav.getState().station)
+  const tDrawer = useRef(-10)
 
   useFrame(() => {
     const nav = useNav.getState()
     const t = performance.now() / 1000
+
+    // Ledger drawer: opens as the camera cranes down, closes behind you.
+    if (nav.station !== prevStation.current) {
+      if (nav.station === 'ledger' || prevStation.current === 'ledger') tDrawer.current = t
+      prevStation.current = nav.station
+    }
+    if (drawer.current) {
+      const k = clamp01((t - tDrawer.current) / 0.9)
+      const ext = nav.station === 'ledger' ? settle(k, 0.045) : 1 - easeCamera(k)
+      drawer.current.position.z = 0.25 + ext * 0.34
+    }
 
     // Key turn
     if (keyRef.current) {
@@ -320,7 +407,7 @@ function Choreography({
       // camera departs 250ms after the scene starts reacting
       if (!flightFired.current && t - nav.tOpen >= 0.25) {
         flightFired.current = true
-        nav._arrive('rail')
+        nav._arrive()
       }
       if (t - nav.tOpen >= 1.4) nav._setDoorPhase('open')
     } else if (nav.doorPhase === 'open') {
@@ -349,6 +436,7 @@ export function Wardrobe() {
   const picL = useRef<THREE.SpotLight | null>(null)
   const picR = useRef<THREE.SpotLight | null>(null)
   const cavityFill = useRef<THREE.PointLight | null>(null)
+  const drawer = useRef<THREE.Group | null>(null)
 
   // Material studies — grain follows each panel
   const oakSide = useOak({ rotation: 0, repeat: [1.2, 2.2], color: '#a3835c' })
@@ -365,6 +453,33 @@ export function Wardrobe() {
   const brassBright = useBrass(true)
   const plaqueTex = usePlaqueTexture('THE WARDROBE')
 
+  // bottle-green felt + linen board — wood roughness map doubles as fibre bump
+  const feltMaps = useTexture({ bumpMap: '/textures/dark/rough.jpg' })
+  const felt = useMemo(() => {
+    const m = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#2e3b33'),
+      roughness: 1,
+      bumpMap: feltMaps.bumpMap,
+      bumpScale: 0.6,
+    })
+    m.bumpMap!.wrapS = m.bumpMap!.wrapT = THREE.RepeatWrapping
+    m.bumpMap!.repeat.set(3, 1.2)
+    return m
+  }, [feltMaps])
+  const linen = useMemo(() => {
+    const bump = feltMaps.bumpMap.clone()
+    bump.wrapS = bump.wrapT = THREE.RepeatWrapping
+    bump.repeat.set(5, 14)
+    bump.needsUpdate = true
+    const m = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#d5c9ae'),
+      roughness: 0.98,
+      bumpMap: bump,
+      bumpScale: 0.25,
+    })
+    return m
+  }, [feltMaps])
+
   const doorMats = useMemo(
     () => ({
       stile: oakStile,
@@ -373,8 +488,9 @@ export function Wardrobe() {
       field: oakField,
       brass,
       brassBright,
+      linen,
     }),
-    [oakStile, oakRail, oakPanel, oakField, brass, brassBright],
+    [oakStile, oakRail, oakPanel, oakField, brass, brassBright, linen],
   )
 
   const enter = useNav((s) => s.enter)
@@ -489,8 +605,21 @@ export function Wardrobe() {
         castShadow
       />
 
-      {/* wordmark plaque on the frieze */}
-      <group position={[0, 2.23, ZF + 0.008]}>
+      {/* wordmark plaque on the frieze — clicking it pulls back to the overview */}
+      <group
+        position={[0, 2.23, ZF + 0.008]}
+        onClick={(e) => {
+          if (useNav.getState().doorPhase !== 'open') return
+          e.stopPropagation()
+          useNav.getState().navigate('doors')
+        }}
+        onPointerOver={() => {
+          if (useNav.getState().doorPhase === 'open') document.body.style.cursor = 'pointer'
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'auto'
+        }}
+      >
         <RoundedBox args={[0.46, 0.08, 0.012]} radius={0.005} smoothness={4} material={brass} castShadow />
         <mesh position={[0, 0, 0.0065]}>
           <planeGeometry args={[0.44, 0.064]} />
@@ -571,22 +700,68 @@ export function Wardrobe() {
           ))}
         </group>
 
-        {/* ledger drawer front (Station 4 — slides open in Phase 3) */}
-        <group position={[0, 0.325, 0.25]}>
+        {/* ledger drawer (Station 4) — slides open on a Crane-Down */}
+        <group ref={drawer} position={[0, 0.325, 0.25]}>
           <RoundedBox args={[INNER * 2 - 0.01, 0.22, 0.03]} radius={0.005} smoothness={4} material={oakRail} castShadow receiveShadow />
           {[-0.35, 0.35].map((x) => (
             <mesh key={x} position={[x, -0.01, 0.022]} rotation-x={Math.PI / 2} material={brass} castShadow>
               <torusGeometry args={[0.028, 0.005, 8, 20, Math.PI]} />
             </mesh>
           ))}
+          <Hotspot station="ledger" text="THE LEDGER" position={[0, 0.075, 0.02]} backing={brass} />
+          {/* drawer box, felt-lined */}
+          <mesh position={[0, -0.02, -0.21]} material={walnutPlinth} castShadow>
+            <boxGeometry args={[INNER * 2 - 0.06, 0.16, 0.39]} />
+          </mesh>
+          <mesh position={[0, 0.065, -0.21]}>
+            <boxGeometry args={[INNER * 2 - 0.09, 0.012, 0.36]} />
+            <primitive object={felt} attach="material" />
+          </mesh>
         </group>
 
-        {/* picture lights washing the rail */}
+        {/* the post tray waits on the top shelf (flow arrives in Phase 2) */}
+        <group position={[0.26, 1.916, 0.0]}>
+          <mesh position={[0, 0.008, 0]} material={brass}>
+            <boxGeometry args={[0.34, 0.006, 0.23]} />
+          </mesh>
+          {(
+            [
+              [0, 0.024, 0.112, 0.34, 0.03, 0.006],
+              [0, 0.024, -0.112, 0.34, 0.03, 0.006],
+              [-0.167, 0.024, 0, 0.006, 0.03, 0.23],
+              [0.167, 0.024, 0, 0.006, 0.03, 0.23],
+            ] as const
+          ).map(([x, y, z, w, h, d], i) => (
+            <mesh key={i} position={[x, y, z]} material={brass}>
+              <boxGeometry args={[w, h, d]} />
+            </mesh>
+          ))}
+          {[0, 1, 2].map((i) => (
+            <mesh key={i} position={[-0.03 + i * 0.03, 0.034 + i * 0.009, 0.01 - i * 0.012]} rotation={[0, -0.14 + i * 0.12, 0]} castShadow>
+              <boxGeometry args={[0.21, 0.005, 0.14]} />
+              <meshStandardMaterial color="#f2ead9" roughness={0.9} />
+            </mesh>
+          ))}
+        </group>
+
+        {/* station plaques — diegetic navigation */}
+        <Hotspot station="rail" text="THE RAIL" position={[0.16, 0.468, 0.262]} backing={brass} />
+        <Hotspot station="shelves" text="THE SHELVES" position={[-0.5, 1.503, 0.196]} backing={brass} />
+        <Hotspot station="post" text="THE POST" position={[0.44, 1.9, 0.23]} backing={brass} />
+
+        {/* picture lights washing the rail — shade + mounting stems */}
         <group position={[0, 2.02, 0.24]}>
           {[-0.34, 0.34].map((x) => (
-            <mesh key={x} position={[x, 0, 0]} rotation-z={Math.PI / 2} material={brass}>
-              <cylinderGeometry args={[0.011, 0.011, 0.16, 12, 1, false, 0, Math.PI]} />
-            </mesh>
+            <group key={x} position={[x, 0, 0]}>
+              <mesh rotation-z={Math.PI / 2} material={brass}>
+                <cylinderGeometry args={[0.011, 0.011, 0.16, 12, 1, false, 0, Math.PI]} />
+              </mesh>
+              {[-0.055, 0.055].map((sx) => (
+                <mesh key={sx} position={[sx, 0.055, -0.01]} rotation-x={-0.18} material={brass}>
+                  <cylinderGeometry args={[0.0035, 0.0035, 0.11, 8]} />
+                </mesh>
+              ))}
+            </group>
           ))}
         </group>
         <Spot
@@ -619,7 +794,7 @@ export function Wardrobe() {
       <Door side="left" doorRef={doorL} materials={doorMats} />
       <Door side="right" doorRef={doorR} keyRef={keyRef} materials={doorMats} />
 
-      <Choreography doorL={doorL} doorR={doorR} keyRef={keyRef} picL={picL} picR={picR} cavityFill={cavityFill} />
+      <Choreography doorL={doorL} doorR={doorR} keyRef={keyRef} picL={picL} picR={picR} cavityFill={cavityFill} drawer={drawer} />
     </group>
   )
 }
