@@ -570,6 +570,217 @@
   padding: 8px 0;
 }
 
+/* —— The Pinboard station panel —— */
+.pinboard {
+  position: absolute;
+  top: 84px;
+  left: 34px;
+  width: 320px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+.pinboard h2 {
+  font-family: var(--font-serif);
+  font-weight: 560;
+  font-size: 20px;
+  margin: 0;
+}
+.pinboard .sub {
+  font-size: 11px;
+  color: #7a7060;
+  margin: -6px 0 4px;
+}
+.pinboard .sheet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  overflow-y: auto;
+  margin: 2px -4px -4px;
+  padding: 2px 4px 4px;
+}
+.pinboard .sheet-card {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #d3c5a8;
+  background: #efe7d4;
+  box-shadow: 0 6px 14px -10px rgba(20, 14, 6, 0.7);
+  transition: transform 200ms var(--ease-ui);
+}
+.pinboard .sheet-card:hover {
+  transform: translateY(-2px);
+}
+.pinboard .sheet-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pinboard .sheet-card .cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 4px 6px;
+  font-family: var(--font-serif);
+  font-size: 10px;
+  color: var(--ink);
+  background: linear-gradient(0deg, rgba(246, 240, 226, 0.95), transparent);
+}
+.pinboard .empty {
+  font-size: 12px;
+  color: #7a7060;
+  line-height: 1.5;
+  padding: 6px 0;
+}
+
+/* —— The Pinboard sheet editor (Station 5) —— */
+.sheet-editor {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(20, 14, 8, 0.86);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.sheet-topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(94vw, 1040px);
+}
+.sheet-topbar .title-in {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 550;
+  color: var(--linen);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  outline: none;
+  padding: 2px 0;
+  flex: 1;
+  min-width: 0;
+}
+.sheet-topbar .title-in:focus {
+  border-bottom-color: var(--brass);
+}
+.sheet-tools {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.tool {
+  font-family: var(--font-sans);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--linen) 80%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(176, 141, 87, 0.35);
+  border-radius: 2px;
+  padding: 6px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 180ms var(--ease-ui);
+}
+.tool:hover {
+  background: rgba(176, 141, 87, 0.22);
+  color: var(--linen);
+}
+.tool:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.tool.primary {
+  background: var(--brass);
+  color: #1e150a;
+  border-color: var(--brass);
+}
+.tool.primary:hover {
+  background: var(--brass-bright);
+}
+
+/* the fixed-ratio sheet stage */
+.sheet-stage {
+  position: relative;
+}
+.sheet {
+  position: relative;
+  width: 1000px;
+  height: 750px;
+  transform-origin: top left;
+  background: linear-gradient(150deg, #fbf8f1, #f1ece0);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+.sheet-el {
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  will-change: transform;
+}
+.sheet-el.sel {
+  outline: 1.5px solid var(--brass);
+  outline-offset: 3px;
+}
+.sheet-el img {
+  display: block;
+  pointer-events: none;
+}
+.sheet-swatch {
+  border-radius: 2px;
+  box-shadow: 0 4px 10px -4px rgba(20, 14, 6, 0.5);
+  border: 3px solid #fff;
+}
+.sheet-caption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.sheet-guide {
+  position: absolute;
+  background: color-mix(in srgb, var(--oxblood) 55%, transparent);
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* selected-element inspector (floats bottom) */
+.sheet-inspector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  width: min(94vw, 1040px);
+  justify-content: center;
+}
+.sheet-inspector .ctl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: color-mix(in srgb, var(--linen) 72%, transparent);
+  font-size: 11px;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+}
+.sheet-inspector input[type='range'] {
+  width: 108px;
+  accent-color: var(--brass);
+}
+.sheet-hint {
+  font-size: 11px;
+  color: color-mix(in srgb, var(--linen) 45%, transparent);
+}
+
 /* —— selection tray (bottom, slides up) —— */
 .seltray {
   position: absolute;

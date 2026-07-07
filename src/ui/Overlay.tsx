@@ -6,13 +6,17 @@ import { STATIONS, STATION_ORDER } from '../scene/stations'
 import { PostTray } from './PostTray'
 import { Ledger } from './Ledger'
 import { MirrorPanel } from './MirrorPanel'
+import { PinboardPanel } from './PinboardPanel'
+import { SheetEditor } from './SheetEditor'
 import { FilterToggle } from './FilterToggle'
 import { SelectModeToggle, SelectionTray } from './SelectionTray'
+import { useSheets } from '../state/sheets'
 
 export function Overlay() {
   const station = useNav((s) => s.station)
   const doorPhase = useNav((s) => s.doorPhase)
   const cutSerial = useNav((s) => s.cutSerial)
+  const editingSheet = useSheets((s) => s.draft !== null)
   const { active } = useProgress()
 
   const [loaded, setLoaded] = useState(false)
@@ -85,11 +89,14 @@ export function Overlay() {
         <AnimatePresence>{open && station === 'post' && <PostTray key="post" />}</AnimatePresence>
         <AnimatePresence>{open && station === 'ledger' && <Ledger key="ledger" />}</AnimatePresence>
         <AnimatePresence>{open && station === 'mirror' && <MirrorPanel key="mirror" />}</AnimatePresence>
+        <AnimatePresence>{open && station === 'pinboard' && !editingSheet && <PinboardPanel key="pin" />}</AnimatePresence>
         <SelectionTray />
       </div>
 
       <div className={`hint smallcaps ${hint ? 'visible' : ''}`}>Turn the key</div>
       <div className={`veil ${veil ? '' : 'lifted'}`} />
+
+      {editingSheet && <SheetEditor />}
     </>
   )
 }

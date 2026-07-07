@@ -3,6 +3,7 @@ import { useSelection } from '../state/selection'
 import { useItems } from '../state/items'
 import { useNav } from '../state/navigation'
 import { useTryOn } from '../state/tryOn'
+import { useSheets } from '../state/sheets'
 import { useObjectUrl } from '../hooks/useObjectUrl'
 import type { WardrobeItem } from '../data/types'
 
@@ -69,7 +70,14 @@ export function SelectionTray() {
           >
             Try on
           </button>
-          <button className="btn btn-primary" style={{ flex: 'none' }} onClick={() => navigate('pinboard')}>
+          <button
+            className="btn btn-primary"
+            style={{ flex: 'none' }}
+            onClick={() => {
+              useSheets.getState().newFromItems(chosen)
+              navigate('pinboard')
+            }}
+          >
             New style sheet
           </button>
           <button className="btn btn-ghost" onClick={clear}>

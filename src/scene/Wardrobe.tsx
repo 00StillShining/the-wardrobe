@@ -10,6 +10,7 @@ import { settle, clamp01, easeCamera } from './easing'
 import { Rail } from './garments/Rail'
 import { Shelves } from './garments/Shelves'
 import { MirrorOutfit } from './garments/MirrorOutfit'
+import { Pinboard3D } from './garments/Pinboard3D'
 
 /* ————— dimensions (metres) —————
    The whole cabinet is parameterised from these so panels stay honest. */
@@ -299,6 +300,10 @@ function Door({ side, doorRef, keyRef, materials }: DoorProps) {
             <planeGeometry args={[0.5, 1.6]} />
             <primitive object={materials.linen} attach="material" />
           </mesh>
+          {/* pinned style-sheet thumbnails (Station 5) */}
+          <group position={[0, 0.02, 0.012]}>
+            <Pinboard3D />
+          </group>
           {(
             [
               [0, 0.815, 0.56, 0.022],

@@ -3,10 +3,12 @@ import { Canvas } from '@react-three/fiber'
 import { Experience } from './scene/Experience'
 import { Overlay } from './ui/Overlay'
 import { useItems } from './state/items'
+import { useSheets } from './state/sheets'
 
 export default function App() {
   useEffect(() => {
     void useItems.getState().init()
+    useSheets.getState().init()
   }, [])
 
   return (
