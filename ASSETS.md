@@ -10,5 +10,8 @@
 Environment lighting is procedural (drei `<Lightformer>` rig) — no HDRI file.
 All other geometry is authored in code; no external models yet.
 
-When the procedural dress form is swapped for a CC0 mannequin GLTF (Phase 4+),
-credit it here with its source and license.
+The dress form (Station 3) is procedural (lathe torso + turned-wood stand).
+To swap in a CC0 humanoid mannequin, set `FORM_GLTF` in
+`src/scene/garments/DressForm.tsx` to the model URL and drop the file in
+`public/models/` — no other code changes needed. Source a headed CC0 mannequin
+from Sketchfab (CC0 filter) or Poly Pizza and credit it here with its license.

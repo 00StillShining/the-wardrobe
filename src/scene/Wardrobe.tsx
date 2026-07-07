@@ -9,6 +9,7 @@ import type { StationId } from './stations'
 import { settle, clamp01, easeCamera } from './easing'
 import { Rail } from './garments/Rail'
 import { Shelves } from './garments/Shelves'
+import { DressForm } from './garments/DressForm'
 
 /* ————— dimensions (metres) —————
    The whole cabinet is parameterised from these so panels stay honest. */
@@ -671,6 +672,8 @@ export function Wardrobe() {
         <Rail />
         {/* the folded shelves (Station 2) — props + folded stacks */}
         <Shelves />
+        {/* the dress form (Station 3) — try-on */}
+        <DressForm />
 
         {/* ledger drawer (Station 4) — slides open on a Crane-Down */}
         <group ref={drawer} position={[0, 0.325, 0.25]}>

@@ -5,6 +5,7 @@ import { useNav } from '../state/navigation'
 import { STATIONS, STATION_ORDER } from '../scene/stations'
 import { PostTray } from './PostTray'
 import { Ledger } from './Ledger'
+import { MirrorPanel } from './MirrorPanel'
 import { FilterToggle } from './FilterToggle'
 import { SelectModeToggle, SelectionTray } from './SelectionTray'
 
@@ -83,6 +84,7 @@ export function Overlay() {
         <AnimatePresence>{atBrowse && <SelectModeToggle key="selmode" />}</AnimatePresence>
         <AnimatePresence>{open && station === 'post' && <PostTray key="post" />}</AnimatePresence>
         <AnimatePresence>{open && station === 'ledger' && <Ledger key="ledger" />}</AnimatePresence>
+        <AnimatePresence>{open && station === 'mirror' && <MirrorPanel key="mirror" />}</AnimatePresence>
         <SelectionTray />
       </div>
 

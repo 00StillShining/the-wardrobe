@@ -22,7 +22,7 @@ export function Experience() {
         target={[0.25, 0.9, 0]}
         angle={0.62}
         penumbra={0.9}
-        intensity={48}
+        intensity={38}
         decay={1.15}
         color="#ffdcae"
         castShadow

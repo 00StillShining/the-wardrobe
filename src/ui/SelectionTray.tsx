@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useSelection } from '../state/selection'
 import { useItems } from '../state/items'
 import { useNav } from '../state/navigation'
+import { useTryOn } from '../state/tryOn'
 import { useObjectUrl } from '../hooks/useObjectUrl'
 import type { WardrobeItem } from '../data/types'
 
@@ -59,7 +60,13 @@ export function SelectionTray() {
               <Thumb key={it.id} item={it} />
             ))}
           </span>
-          <button className="btn btn-ghost" onClick={() => navigate('mirror')}>
+          <button
+            className="btn btn-ghost"
+            onClick={() => {
+              useTryOn.getState().setWorn([...selected])
+              navigate('mirror')
+            }}
+          >
             Try on
           </button>
           <button className="btn btn-primary" style={{ flex: 'none' }} onClick={() => navigate('pinboard')}>

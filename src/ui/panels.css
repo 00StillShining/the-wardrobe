@@ -463,6 +463,113 @@
   fill: #9a8f7c;
 }
 
+/* —— The Mirror outfit tag (Station 3) —— */
+.outfit {
+  position: absolute;
+  top: 84px;
+  right: 34px;
+  width: 288px;
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.outfit h2 {
+  font-family: var(--font-serif);
+  font-weight: 560;
+  font-size: 19px;
+  margin: 0;
+}
+.outfit .sub {
+  font-size: 11px;
+  color: #7a7060;
+  margin: -6px 0 2px;
+}
+.outfit .worn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid #dccfb4;
+}
+.outfit .worn-row img {
+  width: 34px;
+  height: 44px;
+  object-fit: contain;
+  background: #e7e2d8;
+  border-radius: 2px;
+  flex: none;
+}
+.outfit .wn {
+  flex: 1;
+  min-width: 0;
+}
+.outfit .wn .nm {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 540;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.outfit .wn .br {
+  font-size: 10.5px;
+  color: #8a8070;
+}
+.outfit .wn .wish {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+  font-size: 9px;
+  color: var(--oxblood);
+}
+.outfit .wp {
+  font-family: var(--font-serif);
+  font-size: 13px;
+}
+.outfit .doff {
+  border: none;
+  background: transparent;
+  color: #a89b82;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+}
+.outfit .doff:hover {
+  color: var(--oxblood);
+}
+.outfit .total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1.5px solid #cbb98f;
+  padding-top: 10px;
+  margin-top: 2px;
+}
+.outfit .total .lbl {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: #7a7060;
+}
+.outfit .total .amt {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 560;
+}
+.outfit .hint-line {
+  font-size: 10.5px;
+  color: #9a8f7c;
+  text-align: center;
+  font-style: italic;
+}
+.outfit .empty {
+  font-size: 12px;
+  color: #7a7060;
+  line-height: 1.5;
+  padding: 8px 0;
+}
+
 /* —— selection tray (bottom, slides up) —— */
 .seltray {
   position: absolute;
