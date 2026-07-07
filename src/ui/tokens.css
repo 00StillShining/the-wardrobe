@@ -1,0 +1,103 @@
+/* ————————————————————————————————————————————————
+   THE WARDROBE — design tokens
+   Two easing curves app-wide. Shadows are walnut, never black.
+   ———————————————————————————————————————————————— */
+
+:root {
+  /* Palette */
+  --oak: #7a5a38;
+  --walnut: #3e2e1e;
+  --brass: #b08d57;
+  --brass-bright: #d8b97e;
+  --linen: #f3ede2;
+  --ink: #2b2620;
+  --oxblood: #6e2b24;
+  --bottle: #33463c;
+  --room: #171009;
+
+  /* Type */
+  --font-serif: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+
+  /* Motion — the only two curves in the app */
+  --ease-camera: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-ui: cubic-bezier(0.32, 0.94, 0.6, 1);
+  --dur-ui: 300ms;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--linen);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* Letter-spaced small caps — the app's label voice */
+.smallcaps {
+  font-family: var(--font-sans);
+  font-variant-caps: all-small-caps;
+  font-feature-settings: 'smcp' on, 'c2sc' on;
+  letter-spacing: 0.22em;
+  font-weight: 500;
+}
+
+/* —— Top bar ————————————————————————— */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 18px 26px;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-ui);
+}
+.topbar.visible {
+  opacity: 1;
+}
+.topbar .wordmark {
+  font-family: var(--font-serif);
+  font-weight: 550;
+  font-size: 15px;
+  letter-spacing: 0.34em;
+  color: color-mix(in srgb, var(--linen) 88%, transparent);
+}
+.topbar .crumb {
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--brass-bright) 80%, transparent);
+}
+
+/* —— Hint line ————————————————————————— */
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: 7.5%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: color-mix(in srgb, var(--linen) 62%, transparent);
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-ui);
+}
+.hint.visible {
+  opacity: 1;
+}
+
+/* —— Loading / reduced-motion veil ————————— */
+.veil {
+  position: fixed;
+  inset: 0;
+  background: var(--room);
+  z-index: 40;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 420ms var(--ease-ui);
+}
+.veil.lifted {
+  opacity: 0;
+}
