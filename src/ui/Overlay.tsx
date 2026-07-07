@@ -4,6 +4,7 @@ import { useProgress } from '@react-three/drei'
 import { useNav } from '../state/navigation'
 import { STATIONS, STATION_ORDER } from '../scene/stations'
 import { PostTray } from './PostTray'
+import { Ledger } from './Ledger'
 import { FilterToggle } from './FilterToggle'
 import { SelectModeToggle, SelectionTray } from './SelectionTray'
 
@@ -81,6 +82,7 @@ export function Overlay() {
         <AnimatePresence>{atBrowse && <FilterToggle key="filter" />}</AnimatePresence>
         <AnimatePresence>{atBrowse && <SelectModeToggle key="selmode" />}</AnimatePresence>
         <AnimatePresence>{open && station === 'post' && <PostTray key="post" />}</AnimatePresence>
+        <AnimatePresence>{open && station === 'ledger' && <Ledger key="ledger" />}</AnimatePresence>
         <SelectionTray />
       </div>
 

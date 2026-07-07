@@ -282,12 +282,193 @@
   color: #201a10;
 }
 
+/* —— The Ledger (Station 4) — reads like an accounts book, not a table —— */
+.ledger {
+  position: absolute;
+  left: 50%;
+  top: 70px;
+  /* horizontal centering is applied by framer-motion (x: '-50%') so its
+     transform animation doesn't clobber a CSS translateX */
+  width: min(660px, 92vw);
+  max-height: 84vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  /* ledger paper: warm cream with faint horizontal rules */
+  background:
+    linear-gradient(0deg, rgba(212, 198, 168, 0.28) 1px, transparent 1px) 0 0 / 100% 30px,
+    linear-gradient(175deg, #f6f0e2, #ebe1cd);
+}
+.ledger-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 18px 26px 12px 46px;
+  border-bottom: 1.5px solid #cbb98f;
+  position: relative;
+}
+/* the red margin rule down the left, like a ledger */
+.ledger::before {
+  content: '';
+  position: absolute;
+  left: 34px;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: color-mix(in srgb, var(--oxblood) 55%, transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+.ledger-head h2 {
+  font-family: var(--font-serif);
+  font-weight: 560;
+  font-size: 22px;
+  margin: 0;
+}
+.ledger-head .sub {
+  font-size: 11px;
+  color: #8a8070;
+  margin-top: 2px;
+}
+.ledger-sort {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+.ledger-sort span {
+  font-size: 10px;
+  color: #9a8f7c;
+  margin-right: 6px;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+}
+.ledger-sort button {
+  font-family: var(--font-sans);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 600;
+  color: #7a7060;
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 4px 9px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.ledger-sort button.on {
+  color: #201a10;
+  border-color: #c3ad7d;
+  background: rgba(176, 141, 87, 0.16);
+}
+.ledger-scroll {
+  overflow-y: auto;
+  padding: 4px 26px 22px 46px;
+}
+.ledger-entry {
+  padding: 16px 0 14px;
+  border-bottom: 1px solid #d8caa8;
+}
+.ledger-entry:last-child {
+  border-bottom: none;
+}
+.le-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.le-name {
+  font-family: var(--font-serif);
+  font-size: 16.5px;
+  font-weight: 550;
+  line-height: 1.15;
+}
+.le-paid {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  color: #8a8070;
+  margin-top: 3px;
+}
+.le-listings {
+  margin: 11px 0 8px;
+}
+.le-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+.le-row .shop {
+  font-family: var(--font-serif);
+  color: #3a332a;
+  white-space: nowrap;
+}
+.le-row .dots {
+  flex: 1;
+  border-bottom: 1px dotted #b7a67f;
+  transform: translateY(-3px);
+}
+.le-row .amt {
+  font-family: var(--font-serif);
+  font-variant-numeric: tabular-nums;
+  color: #3a332a;
+}
+.le-row.low .shop,
+.le-row.low .amt {
+  color: var(--oxblood);
+  font-weight: 600;
+}
+.le-row.low .amt {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--oxblood) 60%, transparent);
+  text-underline-offset: 3px;
+}
+.le-row .lowtag {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 9.5px;
+  color: var(--oxblood);
+  border: 1px solid color-mix(in srgb, var(--oxblood) 45%, transparent);
+  border-radius: 2px;
+  padding: 0 4px;
+  transform: translateY(-1px);
+}
+.le-foot {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  color: #8a8070;
+}
+.le-foot .save {
+  color: var(--oxblood);
+  font-weight: 600;
+}
+.le-foot .best {
+  color: var(--bottle);
+  font-weight: 600;
+}
+/* pen-ink sparkline */
+.sparkline {
+  flex: none;
+  width: 116px;
+  height: 40px;
+}
+.sparkline .cap {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+  font-size: 9px;
+  fill: #9a8f7c;
+}
+
 /* —— selection tray (bottom, slides up) —— */
 .seltray {
   position: absolute;
   left: 50%;
   bottom: 26px;
-  transform: translateX(-50%);
+  /* centering via framer-motion x: '-50%' (see .ledger note) */
   display: flex;
   align-items: center;
   gap: 14px;

@@ -46,9 +46,9 @@ export function SelectionTray() {
       {chosen.length > 0 && (
         <motion.div
           className="seltray paper"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, x: '-50%', y: 40 }}
+          animate={{ opacity: 1, x: '-50%', y: 0 }}
+          exit={{ opacity: 0, x: '-50%', y: 40 }}
           transition={{ duration: 0.4, ease: [0.32, 0.94, 0.6, 1] }}
         >
           <span className="count">
