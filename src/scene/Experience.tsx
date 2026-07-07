@@ -79,7 +79,7 @@ export function Experience() {
       <CameraRig />
 
       <EffectComposer multisampling={4}>
-        <Bloom mipmapBlur intensity={0.35} luminanceThreshold={0.85} luminanceSmoothing={0.25} />
+        <Bloom mipmapBlur intensity={0.3} luminanceThreshold={0.92} luminanceSmoothing={0.2} />
         <Vignette offset={0.26} darkness={0.5} eskil={false} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>

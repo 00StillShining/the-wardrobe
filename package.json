@@ -11,10 +11,13 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.1.0",
     "@fontsource-variable/inter": "^5.1.0",
+    "@imgly/background-removal": "^1.7.0",
     "@react-three/drei": "^9.114.3",
     "@react-three/fiber": "^8.17.10",
     "@react-three/postprocessing": "^2.16.3",
     "framer-motion": "^11.11.0",
+    "idb-keyval": "^6.2.6",
+    "node-vibrant": "^4.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.169.0",

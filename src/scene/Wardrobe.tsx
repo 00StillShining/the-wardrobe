@@ -7,6 +7,8 @@ import { useOak, useWalnutWood, useBrass, usePlaqueTexture } from './materials/w
 import { useNav } from '../state/navigation'
 import type { StationId } from './stations'
 import { settle, clamp01, easeCamera } from './easing'
+import { Rail } from './garments/Rail'
+import { Shelves } from './garments/Shelves'
 
 /* ————— dimensions (metres) —————
    The whole cabinet is parameterised from these so panels stay honest. */
@@ -70,33 +72,6 @@ function Key({ brass, keyRef }: { brass: THREE.Material; keyRef: React.MutableRe
       {/* bow — slightly ovalled ring */}
       <mesh position={[0, -0.028, 0.058]} scale={[1, 1.3, 1]} material={brass} castShadow>
         <torusGeometry args={[0.021, 0.005, 10, 28]} />
-      </mesh>
-    </group>
-  )
-}
-
-function Hanger({ x, oak, brass }: { x: number; oak: THREE.Material; brass: THREE.Material }) {
-  return (
-    <group position={[x, 0, 0]}>
-      {/* hook wrapping the rail (rail runs along x) */}
-      <group rotation-x={-0.5}>
-        <mesh rotation-y={Math.PI / 2} material={brass} castShadow>
-          <torusGeometry args={[0.026, 0.0032, 8, 24, Math.PI * 1.35]} />
-        </mesh>
-      </group>
-      <mesh position={[0, -0.045, 0.012]} material={brass} castShadow>
-        <cylinderGeometry args={[0.003, 0.003, 0.05, 10]} />
-      </mesh>
-      {/* shoulders */}
-      <mesh position={[-0.082, -0.095, 0.012]} rotation-z={0.3} material={oak} castShadow>
-        <boxGeometry args={[0.175, 0.016, 0.013]} />
-      </mesh>
-      <mesh position={[0.082, -0.095, 0.012]} rotation-z={-0.3} material={oak} castShadow>
-        <boxGeometry args={[0.175, 0.016, 0.013]} />
-      </mesh>
-      {/* bottom bar */}
-      <mesh position={[0, -0.142, 0.012]} material={oak} castShadow>
-        <boxGeometry args={[0.3, 0.014, 0.012]} />
       </mesh>
     </group>
   )
@@ -419,9 +394,9 @@ function Choreography({
 
     // The picture lights warm up as the doors swing
     const glow = clamp01(kR)
-    if (picL.current) picL.current.intensity = glow * 7
-    if (picR.current) picR.current.intensity = glow * 7
-    if (cavityFill.current) cavityFill.current.intensity = glow * 1.15
+    if (picL.current) picL.current.intensity = glow * 2.4
+    if (picR.current) picR.current.intensity = glow * 2.4
+    if (cavityFill.current) cavityFill.current.intensity = glow * 0.7
   })
 
   return null
@@ -448,7 +423,6 @@ export function Wardrobe() {
   const oakShelf = useOak({ rotation: Math.PI / 2, repeat: [1.1, 0.3], color: '#a98a62' })
   const walnutBack = useWalnutWood({ rotation: Math.PI / 2, repeat: [2.2, 2.6], color: '#6d5940' })
   const walnutPlinth = useWalnutWood({ rotation: Math.PI / 2, repeat: [2.2, 0.3], color: '#5d4a33' })
-  const hangerWood = useWalnutWood({ rotation: Math.PI / 2, repeat: [0.5, 0.12], color: '#7a6247' })
   const brass = useBrass()
   const brassBright = useBrass(true)
   const plaqueTex = usePlaqueTexture('THE WARDROBE')
@@ -693,12 +667,10 @@ export function Wardrobe() {
           <cylinderGeometry args={[0.02, 0.02, 0.014, 16]} />
         </mesh>
 
-        {/* empty hangers, waiting */}
-        <group position={[0, 1.68, 0]}>
-          {[-0.03, 0.31, 0.65].map((x) => (
-            <Hanger key={x} x={x} oak={hangerWood} brass={brassBright} />
-          ))}
-        </group>
+        {/* the rail garments (Station 1) — cutouts on hangers */}
+        <Rail />
+        {/* the folded shelves (Station 2) — props + folded stacks */}
+        <Shelves />
 
         {/* ledger drawer (Station 4) — slides open on a Crane-Down */}
         <group ref={drawer} position={[0, 0.325, 0.25]}>
@@ -787,7 +759,7 @@ export function Wardrobe() {
           color="#ffd9a3"
         />
         {/* soft cavity fill so the interior never reads as a cave */}
-        <pointLight ref={cavityFill} position={[0.05, 1.45, 0.05]} intensity={0} decay={2} distance={2.1} color="#e9c99d" />
+        <pointLight ref={cavityFill} position={[0.2, 1.12, 0.2]} intensity={0} decay={2} distance={2.2} color="#e9c99d" />
       </group>
 
       {/* doors */}

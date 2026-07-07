@@ -1,9 +1,14 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Experience } from './scene/Experience'
 import { Overlay } from './ui/Overlay'
+import { useItems } from './state/items'
 
 export default function App() {
+  useEffect(() => {
+    void useItems.getState().init()
+  }, [])
+
   return (
     <>
       <Canvas
