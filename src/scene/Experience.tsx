@@ -1,4 +1,4 @@
-import { Environment, Lightformer, ContactShadows, SoftShadows, Preload } from '@react-three/drei'
+import { Environment, Lightformer, ContactShadows, Preload } from '@react-three/drei'
 import { Spot } from './Spot'
 import { EffectComposer, Bloom, Vignette, ToneMapping } from '@react-three/postprocessing'
 import { ToneMappingMode } from 'postprocessing'
@@ -13,10 +13,8 @@ export function Experience() {
       <fog attach="fog" args={['#14100a', 8.5, 18]} />
       <color attach="background" args={['#14100a']} />
 
-      <SoftShadows size={36} samples={16} focus={0.42} />
-
-      {/* warm key from upper left — the light that makes the hero.
-          Wide cone so its edge paints a soft pool on wall + floor. */}
+      {/* warm key from upper left — the light that makes the hero, and the
+          only shadow-caster (one shadow pass; the fills are shadowless). */}
       <Spot
         position={[-2.7, 3.8, 4.3]}
         target={[0.25, 0.9, 0]}
@@ -26,39 +24,14 @@ export function Experience() {
         decay={1.15}
         color="#ffdcae"
         castShadow
-        shadow-mapSize={[4096, 4096]}
+        shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0001}
         shadow-normalBias={0.025}
       />
-      {/* diagonal wash on the wall, left of the wardrobe */}
-      <Spot
-        position={[-3.2, 3.1, 2.2]}
-        target={[-1.9, 2.0, -0.7]}
-        angle={0.6}
-        penumbra={1}
-        intensity={16}
-        decay={1.3}
-        color="#f7cf9e"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.0002}
-        shadow-normalBias={0.03}
-      />
-      {/* gentle fill on the cabinet's right flank — a spot so it never
-          paints the wall behind (a directional there reads as a phantom) */}
-      <Spot
-        position={[2.8, 2.0, 2.6]}
-        target={[0.4, 1.3, 0.2]}
-        angle={0.5}
-        penumbra={1}
-        intensity={6}
-        decay={1.4}
-        color="#b39a7e"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.0002}
-        shadow-normalBias={0.03}
-      />
+      {/* diagonal wash on the wall, left of the wardrobe (no shadow) */}
+      <Spot position={[-3.2, 3.1, 2.2]} target={[-1.9, 2.0, -0.7]} angle={0.6} penumbra={1} intensity={16} decay={1.3} color="#f7cf9e" />
+      {/* gentle fill on the cabinet's right flank (no shadow) */}
+      <Spot position={[2.8, 2.0, 2.6]} target={[0.4, 1.3, 0.2]} angle={0.5} penumbra={1} intensity={6} decay={1.4} color="#b39a7e" />
       {/* faint warm bounce off the floor */}
       <pointLight position={[0.2, 0.25, 1.5]} intensity={1.6} decay={2} color="#e8bd8b" />
 
@@ -74,11 +47,13 @@ export function Experience() {
       <Wardrobe />
       <DustMotes />
 
-      <ContactShadows position={[0, 0.002, 0.2]} opacity={0.55} scale={7} blur={2.4} far={2.4} resolution={512} color="#231508" />
+      {/* the floor contact shadow is essentially static — render it a few
+          frames after load, then freeze (no per-frame scene re-render) */}
+      <ContactShadows position={[0, 0.002, 0.2]} opacity={0.55} scale={7} blur={2.4} far={2.4} resolution={256} color="#231508" frames={30} />
 
       <CameraRig />
 
-      <EffectComposer multisampling={4}>
+      <EffectComposer multisampling={2}>
         <Bloom mipmapBlur intensity={0.3} luminanceThreshold={0.92} luminanceSmoothing={0.2} />
         <Vignette offset={0.26} darkness={0.5} eskil={false} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />

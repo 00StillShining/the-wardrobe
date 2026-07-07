@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useNav } from '../state/navigation'
 
-const COUNT = 80
+const COUNT = 48
 
 /** Faint dust drifting through the key light. Time-based, cheap. */
 export function DustMotes() {
