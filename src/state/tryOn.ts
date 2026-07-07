@@ -24,21 +24,21 @@ export const LAYER_SLOT: Record<GarmentTemplate, number> = {
 
 interface TryOnState {
   worn: string[]
-  spin: number
   setWorn: (ids: string[]) => void
   toggleWorn: (id: string) => void
   clearWorn: () => void
-  setSpin: (r: number) => void
 }
 
 export const useTryOn = create<TryOnState>()((set, get) => ({
   worn: [],
-  spin: 0,
   setWorn: (ids) => set({ worn: [...ids] }),
   toggleWorn: (id) => {
     const worn = get().worn
     set({ worn: worn.includes(id) ? worn.filter((w) => w !== id) : [...worn, id] })
   },
   clearWorn: () => set({ worn: [] }),
-  setSpin: (spin) => set({ spin }),
 }))
+
+if (import.meta.env.DEV) {
+  ;(window as unknown as Record<string, unknown>).__tryOn = useTryOn
+}

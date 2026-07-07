@@ -10,8 +10,6 @@
 Environment lighting is procedural (drei `<Lightformer>` rig) — no HDRI file.
 All other geometry is authored in code; no external models yet.
 
-The dress form (Station 3) is procedural (lathe torso + turned-wood stand).
-To swap in a CC0 humanoid mannequin, set `FORM_GLTF` in
-`src/scene/garments/DressForm.tsx` to the model URL and drop the file in
-`public/models/` — no other code changes needed. Source a headed CC0 mannequin
-from Sketchfab (CC0 filter) or Poly Pizza and credit it here with its license.
+The Mirror (Station 3) shows the outfit as a flat "look" — the worn garments'
+cutouts composed head-to-toe inside the mirror frame (no 3D mannequin, no
+reflection pass). No external models are used.

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { RoundedBox, MeshReflectorMaterial, useTexture } from '@react-three/drei'
+import { RoundedBox, useTexture } from '@react-three/drei'
 import { Spot } from './Spot'
 import { useOak, useWalnutWood, useBrass, usePlaqueTexture } from './materials/woods'
 import { useNav } from '../state/navigation'
@@ -9,7 +9,7 @@ import type { StationId } from './stations'
 import { settle, clamp01, easeCamera } from './easing'
 import { Rail } from './garments/Rail'
 import { Shelves } from './garments/Shelves'
-import { DressForm } from './garments/DressForm'
+import { MirrorOutfit } from './garments/MirrorOutfit'
 
 /* ————— dimensions (metres) —————
    The whole cabinet is parameterised from these so panels stay honest. */
@@ -276,22 +276,17 @@ function Door({ side, doorRef, keyRef, materials }: DoorProps) {
             </mesh>
           ))}
           <Hotspot station="mirror" text="THE MIRROR" position={[0, 0.885, 0.016]} backing={materials.brass} />
+          {/* dark glass backing — a static tinted surface, no live reflection
+              pass (cheaper). The dress form stands within the frame so the
+              mirror *shows* the mannequin rather than reflecting the room. */}
           <mesh position={[0, 0, 0.008]}>
             <planeGeometry args={[0.48, 1.58]} />
-            <MeshReflectorMaterial
-              blur={[280, 60]}
-              resolution={1024}
-              mixBlur={0.9}
-              mixStrength={1.1}
-              mirror={0.85}
-              depthScale={0.4}
-              minDepthThreshold={0.4}
-              maxDepthThreshold={1.2}
-              color="#b9bcb6"
-              metalness={0.5}
-              roughness={0.35}
-            />
+            <meshStandardMaterial color="#161a1d" metalness={0.72} roughness={0.3} envMapIntensity={0.5} />
           </mesh>
+          {/* the outfit (Station 3) — worn pieces composed flat in the mirror */}
+          <group position={[0, 0.02, 0.02]}>
+            <MirrorOutfit />
+          </group>
         </group>
       )}
 
@@ -672,8 +667,6 @@ export function Wardrobe() {
         <Rail />
         {/* the folded shelves (Station 2) — props + folded stacks */}
         <Shelves />
-        {/* the dress form (Station 3) — try-on */}
-        <DressForm />
 
         {/* ledger drawer (Station 4) — slides open on a Crane-Down */}
         <group ref={drawer} position={[0, 0.325, 0.25]}>

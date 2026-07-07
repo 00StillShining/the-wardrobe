@@ -47,11 +47,11 @@ export function MirrorPanel() {
       transition={{ duration: 0.35, ease: [0.32, 0.94, 0.6, 1] }}
     >
       <h2 className="paper-serif">The Outfit</h2>
-      <div className="sub">{wornItems.length ? `${wornItems.length} on the form` : 'The form stands bare'}</div>
+      <div className="sub">{wornItems.length ? `${wornItems.length} in this look` : 'No look yet'}</div>
 
       {wornItems.length === 0 ? (
         <div className="empty">
-          Nothing on yet. Pick garments on the Rail, tick a few, and choose <em>Try on</em> — they'll dress the form here.
+          Nothing on yet. Pick garments on the Rail, tick a few, and choose <em>Try on</em> — they'll compose into a look here.
         </div>
       ) : (
         <>
@@ -62,7 +62,7 @@ export function MirrorPanel() {
             <span className="lbl">Outfit total</span>
             <span className="amt">£{total}</span>
           </div>
-          <div className="hint-line">Drag the form to turn it · × to take a piece off</div>
+          <div className="hint-line">× to take a piece off · add more from the rail</div>
         </>
       )}
 
