@@ -22,7 +22,7 @@ export const STATIONS: Record<StationId, Framing> = {
   doors: { name: 'The Doors', pos: v(0.42, 1.45, 4.95), tgt: v(0, 1.21, 0) },
   rail: { name: 'The Rail', pos: v(0.02, 1.34, 2.75), tgt: v(0, 1.18, -0.2) },
   shelves: { name: 'The Shelves', pos: v(-0.33, 1.28, 2.0), tgt: v(-0.5, 1.14, -0.05) },
-  mirror: { name: 'The Mirror', pos: v(1.34, 1.16, 1.02), tgt: v(-0.82, 1.06, -0.05) },
+  mirror: { name: 'The Mirror', pos: v(1.12, 1.2, 2.2), tgt: v(-0.8, 1.08, -0.02) },
   ledger: { name: 'The Ledger', pos: v(0, 1.18, 1.9), tgt: v(0, 0.38, 0.35) },
   pinboard: { name: 'The Pinboard', pos: v(-1.85, 1.28, 2.05), tgt: v(0.76, 1.21, 0.62) },
   post: { name: 'The Post Tray', pos: v(0.15, 2.05, 1.8), tgt: v(0.26, 1.85, -0.02) },
