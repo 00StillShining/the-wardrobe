@@ -8,6 +8,7 @@ import { Ledger } from './Ledger'
 import { MirrorPanel } from './MirrorPanel'
 import { PinboardPanel } from './PinboardPanel'
 import { SheetEditor } from './SheetEditor'
+import { StationNav } from './StationNav'
 import { FilterToggle } from './FilterToggle'
 import { SelectModeToggle, SelectionTray } from './SelectionTray'
 import { useSheets } from '../state/sheets'
@@ -77,13 +78,19 @@ export function Overlay() {
   return (
     <>
       <div className={`topbar ${loaded ? 'visible' : ''}`}>
-        <span className="wordmark">THE WARDROBE</span>
+        <span
+          className={`wordmark ${open ? 'clickable' : ''}`}
+          onClick={() => open && useNav.getState().navigate('doors')}
+        >
+          THE WARDROBE
+        </span>
         <span className="crumb smallcaps">
-          {index + 1} · {STATIONS[station].name}
+          {station === 'doors' ? 'Overview' : `${String(index).padStart(2, '0')} · ${STATIONS[station].name}`}
         </span>
       </div>
 
       <div className="overlay-root">
+        <AnimatePresence>{open && <StationNav key="snav" />}</AnimatePresence>
         <AnimatePresence>{atBrowse && <FilterToggle key="filter" />}</AnimatePresence>
         <AnimatePresence>{atBrowse && <SelectModeToggle key="selmode" />}</AnimatePresence>
         <AnimatePresence>{open && station === 'post' && <PostTray key="post" />}</AnimatePresence>

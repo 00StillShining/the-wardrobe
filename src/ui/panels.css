@@ -250,6 +250,64 @@
   border-color: var(--brass);
 }
 
+/* —— station side-nav (left edge) —— */
+.station-nav {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  z-index: 24;
+}
+.station-nav .snav {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  padding: 8px 12px 8px 9px;
+  border-radius: 0 2px 2px 0;
+  transition: background 220ms var(--ease-ui), border-color 220ms var(--ease-ui);
+}
+.station-nav .snav:hover {
+  background: rgba(30, 22, 12, 0.5);
+}
+.station-nav .snav .num {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--brass) 60%, transparent);
+  transition: color 220ms var(--ease-ui);
+}
+.station-nav .snav .lbl {
+  font-family: var(--font-sans);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--linen) 44%, transparent);
+  transition: color 220ms var(--ease-ui);
+}
+.station-nav .snav:hover .lbl {
+  color: color-mix(in srgb, var(--linen) 82%, transparent);
+}
+.station-nav .snav.on {
+  border-left-color: var(--brass);
+}
+.station-nav .snav.on .lbl,
+.station-nav .snav.on .num {
+  color: var(--brass-bright);
+}
+.wordmark.clickable {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 /* —— filter toggle (top-left, under wordmark) —— */
 .filter-toggle {
   position: absolute;
@@ -574,7 +632,7 @@
 .pinboard {
   position: absolute;
   top: 84px;
-  left: 34px;
+  left: 170px;
   width: 320px;
   max-height: 80vh;
   display: flex;
