@@ -3,6 +3,7 @@ import { stationForPath, type StationId } from '../scene/stations'
 
 export type DoorPhase = 'closed' | 'opening' | 'open'
 export type ViewMode = 'full' | 'split'
+export type SceneQuality = 'auto' | 'high' | 'reduced'
 
 interface SceneState {
   station: StationId
@@ -21,6 +22,8 @@ interface SceneState {
   cutSerial: number
   /** true when the current route has no scene (settings/fixtures) — pauses rendering */
   paused: boolean
+  /** user 3D quality preference (plan §9.9) — SceneCanvas maps it to DPR */
+  quality: SceneQuality
   routeChanged: (pathname: string) => void
   _arrive: (station: StationId) => void
   setFullMotion: (v: boolean) => void
@@ -47,6 +50,7 @@ export const useScene = create<SceneState>((set, get) => ({
   fullMotion: resolveFullMotion(),
   cutSerial: 0,
   paused: false,
+  quality: 'auto',
 
   routeChanged: (pathname) => {
     const target = stationForPath(pathname)

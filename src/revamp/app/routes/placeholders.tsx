@@ -2,27 +2,19 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import s from './placeholders.module.css'
 import { DESTINATIONS } from '../nav'
-import { Button, InlineError, Tabs, TextField } from '../../shared/ui'
+import { Button, InlineError, TextField } from '../../shared/ui'
 import { useBackend } from '../backend'
 import { CollectionView } from '../../features/collection/CollectionView'
 import { ItemDetail } from '../../features/collection/ItemDetail'
 import { SeedControls } from '../../features/collection/SeedControls'
 import { ImportFlow } from '../../features/import/ImportFlow'
+import { SettingsView } from '../../features/settings/SettingsView'
 import { InsightsView } from '../../features/insights/InsightsView'
 import { OutfitsList } from '../../features/outfits/OutfitsList'
 import { OutfitStudio } from '../../features/outfits/OutfitStudio'
 import { BoardsList } from '../../features/style/BoardsList'
 import { BoardEditor } from '../../features/style/BoardEditor'
 
-function PageHead({ title, job, phase }: { title: string; job: string; phase: string }) {
-  return (
-    <header className={s.head}>
-      <h1 className={s.title}>{title}</h1>
-      <p className={s.job}>{job}</p>
-      <p className={s.phase}>Functional build arrives in {phase}.</p>
-    </header>
-  )
-}
 
 export function OverviewPage() {
   return (
@@ -155,28 +147,14 @@ export function ImportPage() {
   )
 }
 
-const SETTINGS_TABS = [
-  { id: 'profile', label: 'Profile', content: <p className={s.settingsNote}>Display name, currency and locale — Phase 9.</p> },
-  { id: 'preferences', label: 'Preferences', content: <p className={s.settingsNote}>Reduced motion and 3D quality — applied instantly, persisted per account.</p> },
-  { id: 'connections', label: 'Connections', content: <p className={s.settingsNote}>Email receipt import appears here only when a provider is configured. Nothing is simulated.</p> },
-  {
-    id: 'data',
-    label: 'Data',
-    content: (
-      <div className={s.settingsStack}>
-        <p className={s.settingsNote}>Storage usage, full export, and account deletion — Phase 9.</p>
-        <SeedControls />
-      </div>
-    ),
-  },
-]
-
 export function SettingsPage() {
-  const [tab, setTab] = useState('profile')
   return (
     <section className={s.workspaceWide}>
-      <PageHead title="Settings" job="Account, preferences, connections and your data." phase="Phase 9" />
-      <Tabs label="Settings sections" tabs={SETTINGS_TABS} active={tab} onChange={setTab} />
+      <header className={s.head}>
+        <h1 className={s.title}>Settings</h1>
+        <p className={s.job}>Account, preferences, connections and your data.</p>
+      </header>
+      <SettingsView seedControls={<SeedControls />} />
     </section>
   )
 }

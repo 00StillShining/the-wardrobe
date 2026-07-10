@@ -136,6 +136,46 @@
   }
 }
 
+/* —— system states —— */
+.offline {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  padding: var(--space-2) var(--space-4);
+  background: var(--room-raised);
+  color: var(--linen-bright);
+  font-size: var(--text-s);
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.routeError {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-10);
+  background: var(--surface);
+  min-height: 100%;
+}
+
+.routeError h2 {
+  font-size: var(--text-2xl);
+}
+
+.routeError p {
+  color: var(--text-muted);
+}
+
+.routeError button {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--surface-raised);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
 /* —— bottom nav (mobile only) —— */
 .bottomNav {
   display: none;
