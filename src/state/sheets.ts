@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { StyleSheet, SheetElement, WardrobeItem } from '../data/types'
 import { localStorageAdapter as storage } from '../adapters/storage/StorageAdapter'
+import { isStoredSheets } from '../adapters/storage/validation'
 
 /**
  * Style-sheet state (Station 5). Sheets are edited as a draft (with undo/redo),
@@ -177,8 +178,8 @@ export const useSheets = create<SheetsState>()((set, get) => ({
   future: [],
 
   init: () => {
-    const saved = storage.readJSON<StyleSheet[]>(SHEETS_KEY)
-    if (saved) set({ sheets: saved })
+    const saved = storage.readJSON<unknown>(SHEETS_KEY)
+    if (isStoredSheets(saved)) set({ sheets: saved })
   },
 
   newFromItems: (items) => {

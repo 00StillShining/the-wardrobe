@@ -4,8 +4,20 @@ import { CAPSULE } from '../data/seeds/capsule'
 import { illustrateToBlob } from '../scene/garments/illustrate'
 import { workerImageAdapter } from '../adapters/images/ImageAdapter'
 import { localStorageAdapter as storage } from '../adapters/storage/StorageAdapter'
+import { isStoredWardrobeItems } from '../adapters/storage/validation'
 
 export type Filter = 'all' | 'owned' | 'wishlist'
+
+export interface NewWardrobeItem {
+  name: string
+  brand: string
+  category: WardrobeItem['category']
+  template: WardrobeItem['template']
+  owned: boolean
+  pricePaid?: number
+  currency?: string
+  merchant?: string
+}
 
 const ITEMS_KEY = 'items'
 const SEEDED_KEY = 'seeded'
@@ -20,6 +32,7 @@ interface ItemsState {
   importing: Set<string>
   filter: Filter
   init: () => Promise<void>
+  addItem: (input: NewWardrobeItem, original: Blob, sampleCorner?: boolean) => Promise<WardrobeItem>
   importLine: (line: ReceiptLineItem, receiptId: string) => Promise<WardrobeItem | null>
   toggleOwned: (id: string) => void
   remove: (id: string) => void
@@ -44,9 +57,13 @@ export const useItems = create<ItemsState>()((set, get) => ({
 
   init: async () => {
     if (get().ready || get().seeding) return
-    const saved = storage.readJSON<WardrobeItem[]>(ITEMS_KEY)
-    if (saved && saved.length) {
+    const saved = storage.readJSON<unknown>(ITEMS_KEY)
+    if (isStoredWardrobeItems(saved)) {
       set({ items: saved, ready: true })
+      return
+    }
+    if (storage.readJSON<boolean>(SEEDED_KEY) === true) {
+      set({ ready: true })
       return
     }
     // First run — seed the capsule through the real cutout pipeline.
@@ -81,6 +98,30 @@ export const useItems = create<ItemsState>()((set, get) => ({
     storage.writeJSON(SEEDED_KEY, true)
     persist(built)
     set({ items: built, seeding: false, ready: true })
+  },
+
+  addItem: async (input, original, sampleCorner = false) => {
+    const id = `item-${crypto.randomUUID().slice(0, 8)}`
+    const { cutout, palette } = await workerImageAdapter.process(original, sampleCorner ? null : undefined)
+    await storage.putBlob(origKey(id), original)
+    await storage.putBlob(cutKey(id), cutout)
+    const item: WardrobeItem = {
+      id,
+      name: input.name.trim(),
+      brand: input.brand.trim() || 'Unlabelled',
+      category: input.category,
+      template: input.template,
+      owned: input.owned,
+      images: { original: origKey(id), cutout: cutKey(id) },
+      palette,
+      pricePaid: input.pricePaid,
+      currency: input.currency ?? 'GBP',
+      source: { merchant: (input.merchant ?? input.brand.trim()) || 'Manual', addedAt: new Date().toISOString().slice(0, 10) },
+    }
+    const items = [...get().items, item]
+    persist(items)
+    set({ items })
+    return item
   },
 
   importLine: async (line, receiptId) => {

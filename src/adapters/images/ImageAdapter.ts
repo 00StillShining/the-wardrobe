@@ -8,7 +8,7 @@ import { STUDIO_BG } from '../../scene/garments/illustrate'
  * same interface.
  */
 export interface ImageAdapter {
-  process(original: Blob, bg?: string): Promise<{ cutout: Blob; palette: string[] }>
+  process(original: Blob, bg?: string | null): Promise<{ cutout: Blob; palette: string[] }>
 }
 
 let worker: Worker | null = null
@@ -35,7 +35,7 @@ export const workerImageAdapter: ImageAdapter = {
     const id = `img-${++seq}`
     return new Promise((resolve, reject) => {
       pending.set(id, { resolve, reject })
-      const req: BgRemovalRequest = { id, blob: original, bg }
+      const req: BgRemovalRequest = { id, blob: original, ...(bg ? { bg } : {}) }
       w.postMessage(req)
     })
   },

@@ -5,6 +5,7 @@ import { useItems } from '../state/items'
 import { useObjectUrl } from '../hooks/useObjectUrl'
 import { localStorageAdapter, objectUrlFor } from '../adapters/storage/StorageAdapter'
 import { renderSheetToBlob } from '../lib/renderSheet'
+import { AlertCircle, LoaderCircle } from 'lucide-react'
 
 const SHEET_W = 1000
 const SHEET_H = 750
@@ -71,6 +72,7 @@ export function SheetEditor() {
   const [selected, setSelected] = useState<string | null>(null)
   const [guides, setGuides] = useState<{ v: boolean; h: boolean }>({ v: false, h: false })
   const [exporting, setExporting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [vp, setVp] = useState({ w: window.innerWidth, h: window.innerHeight })
   const fileRef = useRef<HTMLInputElement | null>(null)
 
@@ -130,36 +132,46 @@ export function SheetEditor() {
   const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    const key = `insp:${Date.now().toString(36)}`
-    await localStorageAdapter.putBlob(key, file)
-    addImage(key)
-    e.target.value = ''
+    setError(null)
+    try {
+      if (!file.type.startsWith('image/')) throw new Error('Unsupported file type')
+      if (file.size > 12 * 1024 * 1024) throw new Error('Image is too large')
+      const key = `insp:${Date.now().toString(36)}`
+      await localStorageAdapter.putBlob(key, file)
+      addImage(key)
+    } catch (cause) {
+      console.warn('[sheet] image upload failed', cause)
+      setError('The image could not be added. Choose an image smaller than 12 MB.')
+    } finally {
+      e.target.value = ''
+    }
   }
 
   const onExport = useCallback(async () => {
     const d = useSheets.getState().draft
     if (!d) return
     setExporting(true)
+    setError(null)
     setSelected(null)
-    // resolve object URLs for every raster element, then flatten to a 2× PNG
-    const items = useItems.getState().items
-    const urls: Record<string, string> = {}
-    for (const el of d.elements) {
-      const key =
-        el.kind === 'cutout' ? items.find((i) => i.id === el.itemId)?.images.cutout : el.kind === 'image' ? el.imageKey : undefined
-      if (key) {
-        const u = await objectUrlFor(key)
-        if (u) urls[el.id] = u
-      }
-    }
-    let blob: Blob | null = null
     try {
-      blob = await renderSheetToBlob(d.elements, urls)
-    } catch (err) {
-      console.warn('[sheet] export failed', err)
+      const items = useItems.getState().items
+      const urls: Record<string, string> = {}
+      for (const el of d.elements) {
+        const key =
+          el.kind === 'cutout' ? items.find((i) => i.id === el.itemId)?.images.cutout : el.kind === 'image' ? el.imageKey : undefined
+        if (key) {
+          const url = await objectUrlFor(key)
+          if (url) urls[el.id] = url
+        }
+      }
+      const blob = await renderSheetToBlob(d.elements, urls)
+      await saveDraft(blob)
+    } catch (cause) {
+      console.warn('[sheet] export failed', cause)
+      setError('The style sheet could not be exported. Your arrangement is still open.')
+    } finally {
+      setExporting(false)
     }
-    await saveDraft(blob)
-    setExporting(false)
   }, [saveDraft])
 
   if (!draft) return null
@@ -169,32 +181,35 @@ export function SheetEditor() {
   return (
     <div className="sheet-editor" onPointerDown={() => setSelected(null)}>
       <div className="sheet-topbar" onPointerDown={(e) => e.stopPropagation()}>
-        <input className="title-in" value={draft.title} onChange={(e) => setTitle(e.target.value)} />
+        <input className="title-in" aria-label="Style sheet title" value={draft.title} onChange={(e) => setTitle(e.target.value)} />
         <div className="sheet-tools">
-          <button className="tool" onClick={() => addSwatch(sel?.color ?? '#6e2b24')}>
+          <button type="button" className="tool" onClick={() => addSwatch(sel?.color ?? '#6e2b24')}>
             + Swatch
           </button>
-          <button className="tool" onClick={addCaption}>
+          <button type="button" className="tool" onClick={addCaption}>
             + Text
           </button>
-          <button className="tool" onClick={() => fileRef.current?.click()}>
+          <button type="button" className="tool" onClick={() => fileRef.current?.click()}>
             + Image
           </button>
-          <button className="tool" onClick={undo} disabled={!past}>
+          <button type="button" className="tool" onClick={undo} disabled={!past}>
             Undo
           </button>
-          <button className="tool" onClick={redo} disabled={!future}>
+          <button type="button" className="tool" onClick={redo} disabled={!future}>
             Redo
           </button>
-          <button className="tool" onClick={close}>
+          <button type="button" className="tool" onClick={close}>
             Close
           </button>
-          <button className="tool primary" onClick={onExport} disabled={exporting}>
-            {exporting ? 'Exporting…' : 'Export & pin'}
+          <button type="button" className="tool primary icon-text-button" onClick={onExport} disabled={exporting}>
+            {exporting && <LoaderCircle className="spin" size={13} aria-hidden="true" />}
+            {exporting ? 'Exporting' : 'Export & pin'}
           </button>
         </div>
         <input ref={fileRef} type="file" accept="image/*" hidden onChange={onUpload} />
       </div>
+
+      {error && <div className="sheet-error" role="status"><AlertCircle size={14} aria-hidden="true" /> {error}</div>}
 
       <div className="sheet-stage" style={{ width: SHEET_W * fit, height: SHEET_H * fit }} onPointerDown={(e) => e.stopPropagation()}>
         <div style={{ transform: `scale(${fit})`, transformOrigin: 'top left' }}>
@@ -257,18 +272,18 @@ export function SheetEditor() {
                 onChange={(e) => updateEl(sel.id, { text: e.target.value })}
               />
             )}
-            <button className="tool" onClick={() => bring(sel.id, 'front')}>
+            <button type="button" className="tool" onClick={() => bring(sel.id, 'front')}>
               Front
             </button>
-            <button className="tool" onClick={() => bring(sel.id, 'back')}>
+            <button type="button" className="tool" onClick={() => bring(sel.id, 'back')}>
               Back
             </button>
-            <button className="tool" onClick={() => (removeEl(sel.id), setSelected(null))}>
+            <button type="button" className="tool" onClick={() => (removeEl(sel.id), setSelected(null))}>
               Remove
             </button>
           </>
         ) : (
-          <span className="sheet-hint">Drag to arrange · click a piece to size, tilt or layer it · ⌘Z to undo</span>
+          <span className="sheet-hint">Nothing selected</span>
         )}
       </div>
     </div>

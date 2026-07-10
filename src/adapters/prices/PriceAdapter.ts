@@ -1,7 +1,7 @@
 import type { PriceListing } from '../../data/types'
 
 /**
- * Price-comparison boundary (spec §4). MockPriceAdapter fabricates realistic
+ * Price-comparison boundary (spec §4). SamplePriceAdapter fabricates realistic
  * cross-shop listings deterministically from the item id, so the Ledger drawer
  * has honest-looking stationery to render. A real integration (retail search
  * API / affiliate feed) can replace this behind the same interface.
@@ -32,7 +32,7 @@ function seeded(seed: string): () => number {
 
 const CHECK_DATES = ['3 Jul', '1 Jul', '28 Jun', '25 Jun', '2 Jul', '30 Jun']
 
-export const mockPriceAdapter: PriceAdapter = {
+export const samplePriceAdapter: PriceAdapter = {
   async getListings(itemId, pricePaid = 120) {
     const rnd = seeded(itemId)
     const count = 3 + Math.floor(rnd() * 3) // 3–5 shops

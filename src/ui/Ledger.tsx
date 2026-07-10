@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { PriceListing, WardrobeItem } from '../data/types'
 import { useItems } from '../state/items'
-import { mockPriceAdapter } from '../adapters/prices/PriceAdapter'
+import { samplePriceAdapter } from '../adapters/prices/PriceAdapter'
+import { showSampleData } from '../config/runtime'
 
 interface Entry {
   item: WardrobeItem
@@ -46,20 +47,25 @@ function Sparkline({ points }: { points: number[] }) {
 
 export function Ledger() {
   const items = useItems((s) => s.items)
-  const [entries, setEntries] = useState<Entry[] | null>(null)
+  const [entries, setEntries] = useState<Entry[] | null>(() => (showSampleData ? null : []))
   const [sort, setSort] = useState<Sort>('saving')
 
   // Only owned items with a price paid make a ledger entry.
   const priced = useMemo(() => items.filter((i) => i.owned && i.pricePaid != null), [items])
 
   useEffect(() => {
+    if (!showSampleData) {
+      setEntries([])
+      return
+    }
+
     let alive = true
     ;(async () => {
       const built = await Promise.all(
         priced.map(async (item): Promise<Entry> => {
           const [listings, history] = await Promise.all([
-            mockPriceAdapter.getListings(item.id, item.pricePaid),
-            mockPriceAdapter.getHistory(item.id, item.pricePaid),
+            samplePriceAdapter.getListings(item.id, item.pricePaid),
+            samplePriceAdapter.getHistory(item.id, item.pricePaid),
           ])
           const lowest = Math.min(...listings.map((l) => l.price))
           const cheapest = listings.find((l) => l.price === lowest)!
@@ -99,21 +105,23 @@ export function Ledger() {
       <div className="ledger-head">
         <div>
           <h2 className="paper-serif">The Ledger</h2>
-          <div className="sub">What you paid, against what your shops ask today</div>
+          <div className="sub">{showSampleData ? 'Illustrative comparisons from sample retailer data' : 'Live retailer tracking is not connected'}</div>
         </div>
-        <div className="ledger-sort">
+        <div className="ledger-sort" role="group" aria-label="Ledger sort order">
           <span>Sort</span>
-          <button className={sort === 'saving' ? 'on' : ''} onClick={() => setSort('saving')}>
+          <button type="button" className={sort === 'saving' ? 'on' : ''} aria-pressed={sort === 'saving'} onClick={() => setSort('saving')}>
             By saving
           </button>
-          <button className={sort === 'name' ? 'on' : ''} onClick={() => setSort('name')}>
+          <button type="button" className={sort === 'name' ? 'on' : ''} aria-pressed={sort === 'name'} onClick={() => setSort('name')}>
             A–Z
           </button>
         </div>
       </div>
 
       <div className="ledger-scroll">
-        {!entries && <div className="importing-note" style={{ justifyContent: 'center', padding: '22px 0' }}>Checking prices…</div>}
+        {!entries && <div className="importing-note" style={{ justifyContent: 'center', padding: '22px 0' }}>Preparing sample comparisons…</div>}
+        {!showSampleData && <div className="empty">Live price comparisons will appear when a retail provider is connected.</div>}
+        {showSampleData && entries?.length === 0 && <div className="empty">Add a price to a piece to include it in the ledger.</div>}
         {sorted.map((e) => (
           <div className="ledger-entry" key={e.item.id}>
             <div className="le-top">
@@ -145,11 +153,11 @@ export function Ledger() {
             <div className="le-foot">
               {e.saving > 0 ? (
                 <>
-                  <span className="save">You'd save £{e.saving}</span> · elsewhere · last checked {e.checkedAt}
+                  <span className="save">Sample saving £{e.saving}</span> · sampled {e.checkedAt}
                 </>
               ) : (
                 <>
-                  <span className="best">Best price paid</span> · nothing cheaper found · checked {e.checkedAt}
+                  <span className="best">Best price in sample</span> · sampled {e.checkedAt}
                 </>
               )}
             </div>

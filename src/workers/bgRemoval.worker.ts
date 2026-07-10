@@ -3,8 +3,8 @@
  * Background-removal worker. Keys the uniform studio ground out of a product
  * photo and extracts the garment palette from the same ImageData pass — one
  * decode, no main-thread jank. Runs off the known-background keyer by default;
- * a real ML path (@imgly/background-removal) can be dynamically imported here
- * later behind the same message protocol without touching callers.
+ * a real ML path can be dynamically imported here later behind the same
+ * message protocol without touching callers.
  */
 
 export interface BgRemovalRequest {

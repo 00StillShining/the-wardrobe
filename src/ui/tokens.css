@@ -65,10 +65,53 @@ body {
   font-size: 15px;
   letter-spacing: 0.34em;
   color: color-mix(in srgb, var(--linen) 88%, transparent);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
 }
 .topbar .crumb {
   font-size: 11.5px;
   color: color-mix(in srgb, var(--brass-bright) 80%, transparent);
+}
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar .topbar-command,
+.topbar .topbar-icon {
+  pointer-events: auto;
+  border: 1px solid color-mix(in srgb, var(--brass) 48%, transparent);
+  border-radius: 2px;
+  color: color-mix(in srgb, var(--linen) 74%, transparent);
+  background: rgba(20, 14, 8, 0.3);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  transition: border-color 180ms var(--ease-ui), background 180ms var(--ease-ui), color 180ms var(--ease-ui);
+}
+.topbar .topbar-command {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 9px;
+}
+.topbar .topbar-icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+}
+.topbar .topbar-command:hover,
+.topbar .topbar-icon:hover {
+  border-color: var(--brass);
+  background: rgba(20, 14, 8, 0.62);
+  color: var(--linen);
 }
 
 /* —— Hint line ————————————————————————— */
@@ -88,6 +131,32 @@ body {
   opacity: 1;
 }
 
+.boot-status {
+  position: fixed;
+  left: 50%;
+  bottom: 7.5%;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--brass) 35%, transparent);
+  border-radius: 2px;
+  color: color-mix(in srgb, var(--linen) 78%, transparent);
+  background: rgba(20, 14, 8, 0.64);
+  font-size: 10px;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity 240ms var(--ease-ui), transform 240ms var(--ease-ui);
+}
+.boot-status.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* —— Loading / reduced-motion veil ————————— */
 .veil {
   position: fixed;
@@ -100,4 +169,33 @@ body {
 }
 .veil.lifted {
   opacity: 0;
+}
+
+:where(button, input, select):focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 3px;
+}
+
+.paper :where(button, input, select):focus-visible {
+  outline-color: var(--brass);
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    align-items: center;
+    padding: 14px;
+  }
+  .topbar .wordmark {
+    font-size: 13px;
+    letter-spacing: 0.22em;
+  }
+  .topbar .crumb {
+    display: none;
+  }
+  .topbar-actions {
+    gap: 8px;
+  }
+  .topbar .topbar-command {
+    padding-inline: 8px;
+  }
 }

@@ -3,8 +3,8 @@ import type { SheetElement } from '../data/types'
 /**
  * Flatten a style sheet to a 2× PNG by drawing every element onto a canvas —
  * the same layout maths the editor uses, so the export matches the canvas
- * exactly. No html-to-image (which is finicky with blob: URLs, fonts and can
- * hang); this is deterministic and offline.
+ * exactly. This avoids DOM snapshot libraries, which are finicky with blob:
+ * URLs and fonts; the exporter stays deterministic and offline.
  */
 
 const W = 2000

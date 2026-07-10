@@ -19,7 +19,7 @@ function WornRow({ item }: { item: WardrobeItem }) {
         </div>
       </span>
       <span className="wp">£{item.pricePaid ?? 0}</span>
-      <button className="doff" title="Take off" onClick={() => doff(item.id)}>
+      <button type="button" className="doff" aria-label={`Take off ${item.name}`} onClick={() => doff(item.id)}>
         ×
       </button>
     </div>
@@ -50,9 +50,7 @@ export function MirrorPanel() {
       <div className="sub">{wornItems.length ? `${wornItems.length} in this look` : 'No look yet'}</div>
 
       {wornItems.length === 0 ? (
-        <div className="empty">
-          Nothing on yet. Pick garments on the Rail, tick a few, and choose <em>Try on</em> — they'll compose into a look here.
-        </div>
+        <div className="empty">No pieces in this look.</div>
       ) : (
         <>
           {wornItems.map((item) => (
@@ -62,12 +60,11 @@ export function MirrorPanel() {
             <span className="lbl">Outfit total</span>
             <span className="amt">£{total}</span>
           </div>
-          <div className="hint-line">× to take a piece off · add more from the rail</div>
         </>
       )}
 
-      <button className="btn btn-ghost" style={{ marginTop: 4 }} onClick={() => navigate('rail')}>
-        Back to the rail
+      <button type="button" className="btn btn-ghost" style={{ marginTop: 4 }} onClick={() => navigate('rail')}>
+        {wornItems.length ? 'Add pieces' : 'Choose pieces'}
       </button>
     </motion.div>
   )

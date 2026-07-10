@@ -1,9 +1,9 @@
 import type { EmailAdapter } from './EmailAdapter'
 
 /**
- * GmailAdapter — real-integration stub. Not wired in v1 (see spec §11: Gmail
- * OAuth is out of scope). The TODOs below outline the real flow so a future
- * pass can slot this behind the same EmailAdapter interface without UI changes.
+ * GmailAdapter — real-integration stub. Gmail access needs OAuth plus a
+ * server-side token exchange, so it must not run from this static client. The
+ * TODOs below outline the real flow behind the same EmailAdapter interface.
  */
 export function createGmailAdapter(): EmailAdapter {
   // TODO(auth): OAuth 2.0 PKCE flow →

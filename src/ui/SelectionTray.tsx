@@ -18,8 +18,10 @@ export function SelectModeToggle() {
   const toggle = useSelection((s) => s.toggleSelectMode)
   return (
     <motion.button
-      className="filter-toggle"
-      style={{ left: 'auto', right: 34, top: 82, padding: '6px 14px', cursor: 'pointer' }}
+      type="button"
+      className="filter-toggle select-mode-toggle"
+      aria-pressed={selectMode}
+      aria-label={selectMode ? 'Finish selecting garments' : 'Select garments'}
       onClick={toggle}
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}

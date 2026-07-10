@@ -6,11 +6,14 @@ import './ui/tokens.css'
 import './ui/panels.css'
 import App from './App'
 import { initHashSync } from './state/navigation'
+import { AppErrorBoundary } from './ui/AppErrorBoundary'
 
 initHashSync()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <AppErrorBoundary>
+      <App />
+    </AppErrorBoundary>
   </React.StrictMode>,
 )

@@ -23,7 +23,7 @@ export function StationNav() {
       {items.map((id) => {
         const n = STATION_ORDER.indexOf(id) // rail = 1 … post = 6
         return (
-          <button key={id} className={`snav ${station === id ? 'on' : ''}`} onClick={() => navigate(id)}>
+          <button type="button" key={id} className={`snav ${station === id ? 'on' : ''}`} aria-current={station === id ? 'page' : undefined} onClick={() => navigate(id)}>
             <span className="num">{String(n).padStart(2, '0')}</span>
             <span className="lbl">{STATIONS[id].name.replace(/^The /, '')}</span>
           </button>

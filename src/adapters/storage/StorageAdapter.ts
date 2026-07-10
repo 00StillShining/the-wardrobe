@@ -15,16 +15,23 @@ export interface StorageAdapter {
   getBlob(key: string): Promise<Blob | undefined>
   delBlob(key: string): Promise<void>
   listBlobKeys(): Promise<string[]>
+  reset(): Promise<void>
 }
 
 const NS = 'wardrobe:'
+const VERSION_KEY = 'schema-version'
+export const STORAGE_SCHEMA_VERSION = 1
+
+export type StorageBootstrapStatus = 'ready' | 'migrated' | 'incompatible'
 
 export const localStorageAdapter: StorageAdapter = {
   readJSON<T>(key: string): T | null {
     try {
       const raw = localStorage.getItem(NS + key)
       return raw ? (JSON.parse(raw) as T) : null
-    } catch {
+    } catch (error) {
+      console.warn('[storage] readJSON failed', key, error)
+      localStorage.removeItem(NS + key)
       return null
     }
   },
@@ -42,10 +49,38 @@ export const localStorageAdapter: StorageAdapter = {
     const all = await keys()
     return all.filter((k): k is string => typeof k === 'string' && k.startsWith(NS)).map((k) => k.slice(NS.length))
   },
+  async reset() {
+    const metadataKeys: string[] = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key?.startsWith(NS)) metadataKeys.push(key)
+    }
+    metadataKeys.forEach((key) => localStorage.removeItem(key))
+
+    const blobKeys = (await keys()).filter((key): key is string => typeof key === 'string' && key.startsWith(NS))
+    await Promise.all(blobKeys.map((key) => del(key)))
+    revokeCachedObjectUrls()
+  },
+}
+
+/** Upgrade compatible metadata in place without discarding a user's wardrobe. */
+export function initializeStorage(storage: StorageAdapter = localStorageAdapter): StorageBootstrapStatus {
+  const version = storage.readJSON<unknown>(VERSION_KEY)
+  if (typeof version === 'number' && version > STORAGE_SCHEMA_VERSION) return 'incompatible'
+  if (version !== STORAGE_SCHEMA_VERSION) {
+    storage.writeJSON(VERSION_KEY, STORAGE_SCHEMA_VERSION)
+    return 'migrated'
+  }
+  return 'ready'
 }
 
 /** Live object-URL cache so the same blob key reuses one URL per session. */
 const urlCache = new Map<string, string>()
+
+function revokeCachedObjectUrls() {
+  for (const url of urlCache.values()) URL.revokeObjectURL(url)
+  urlCache.clear()
+}
 
 export async function objectUrlFor(key: string, storage: StorageAdapter = localStorageAdapter): Promise<string | null> {
   if (urlCache.has(key)) return urlCache.get(key)!

@@ -9,10 +9,10 @@ function SheetCard({ sheet }: { sheet: StyleSheet }) {
   const url = useObjectUrl(sheet.exportPng)
   const open = useSheets((s) => s.open)
   return (
-    <div className="sheet-card" onClick={() => open(sheet.id)}>
-      {url && <img src={url} alt={sheet.title} />}
+    <button type="button" className="sheet-card" onClick={() => open(sheet.id)} aria-label={`Open style sheet: ${sheet.title}`}>
+      {url && <img src={url} alt="" />}
       <span className="cap">{sheet.title}</span>
-    </div>
+    </button>
   )
 }
 
@@ -39,14 +39,14 @@ export function PinboardPanel() {
       transition={{ duration: 0.35, ease: [0.32, 0.94, 0.6, 1] }}
     >
       <h2 className="paper-serif">The Pinboard</h2>
-      <div className="sub">Style sheets — compose a look, export, pin it</div>
+      <div className="sub">Saved looks and compositions</div>
 
-      <button className="btn btn-primary" onClick={start}>
+      <button type="button" className="btn btn-primary" onClick={start} disabled={items.length === 0}>
         {selected.size ? `New sheet from ${selected.size} selected` : 'New style sheet'}
       </button>
 
       {sheets.length === 0 ? (
-        <div className="empty">No sheets yet. Start one — arrange your cutouts on the sheet, add swatches, and export a PNG.</div>
+        <div className="empty">{items.length ? 'No style sheets yet.' : 'Add a piece before creating a style sheet.'}</div>
       ) : (
         <div className="sheet-grid">
           {sheets.map((s) => (

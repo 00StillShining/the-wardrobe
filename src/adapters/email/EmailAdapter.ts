@@ -3,7 +3,7 @@ import { INBOX, type InboxSpec } from '../../data/seeds/receipts'
 import { illustrateToDataUrl } from '../../scene/garments/illustrate'
 
 /**
- * Inbox boundary (spec §6). MockEmailAdapter renders each seed receipt into a
+ * Inbox boundary (spec §6). SampleEmailAdapter renders each seed receipt into a
  * realistic, merchant-varied HTML body with the product photo embedded as a
  * real data-URI (so import runs bg-removal over genuine pixels). GmailAdapter
  * is a stub whose TODOs outline the real OAuth flow.
@@ -55,7 +55,7 @@ function renderHtml(spec: InboxSpec): string {
   </div>`
 }
 
-export const mockEmailAdapter: EmailAdapter = {
+export const sampleEmailAdapter: EmailAdapter = {
   async listReceipts() {
     return INBOX.map((spec) => ({
       id: spec.id,

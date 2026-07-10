@@ -14,13 +14,15 @@ export function FilterToggle() {
   return (
     <motion.div
       className="filter-toggle"
+      role="group"
+      aria-label="Garment filter"
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -6 }}
       transition={{ duration: 0.3 }}
     >
       {OPTS.map((o) => (
-        <button key={o.key} className={filter === o.key ? 'on' : ''} onClick={() => setFilter(o.key)}>
+        <button type="button" key={o.key} className={filter === o.key ? 'on' : ''} aria-pressed={filter === o.key} onClick={() => setFilter(o.key)}>
           {o.label}
         </button>
       ))}
