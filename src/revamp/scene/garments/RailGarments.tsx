@@ -17,11 +17,23 @@ const HANG_Z = CAB.d / 2 + 0.02
 function GarmentPlane({ url, x, tilt }: { url: string; x: number; tilt: number }) {
   const texture = useLoader(TextureLoader, url)
   texture.colorSpace = SRGBColorSpace
+  const barY = HANG_Y + PLANE_H / 2 + 0.02
   return (
-    <mesh position={[x, HANG_Y, HANG_Z]} rotation={[0, tilt, 0]}>
-      <planeGeometry args={[PLANE_W, PLANE_H]} />
-      <meshStandardMaterial map={texture} transparent alphaTest={0.35} side={DoubleSide} roughness={0.9} />
-    </mesh>
+    <group rotation={[0, tilt, 0]}>
+      <mesh position={[x, HANG_Y, HANG_Z]}>
+        <planeGeometry args={[PLANE_W, PLANE_H]} />
+        <meshStandardMaterial map={texture} transparent alphaTest={0.35} side={DoubleSide} roughness={0.9} />
+      </mesh>
+      {/* wooden hanger bar + brass hook up to the rail */}
+      <mesh position={[x, barY, HANG_Z]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.007, 0.007, PLANE_W * 0.82, 8]} />
+        <meshStandardMaterial color="#8a6f4d" roughness={0.85} />
+      </mesh>
+      <mesh position={[x, (barY + 1.72) / 2, HANG_Z]}>
+        <cylinderGeometry args={[0.004, 0.004, 1.72 - barY, 6]} />
+        <meshStandardMaterial color="#b08d57" metalness={1} roughness={0.3} />
+      </mesh>
+    </group>
   )
 }
 

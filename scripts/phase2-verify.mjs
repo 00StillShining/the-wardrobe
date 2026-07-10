@@ -12,6 +12,22 @@ const OUT = 'docs/rebuild/screens/phase2'
 const STATIONS = ['overview', 'collection', 'outfits', 'style', 'insights', 'import']
 const routeFor = (s) => (s === 'overview' ? '/app' : `/app/${s}`)
 
+
+async function ensureSignedIn(page) {
+  // Phase 3 added the auth guard — sign in (local mode) + onboard if bounced,
+  // then return true so the caller re-navigates to the intended route
+  // (onboarding exits to /app/collection, not where we were headed)
+  if (!/auth\/sign-in/.test(page.url())) return false
+  await page.fill('input[type=email]', 'scene@example.com')
+  await page.click('button[type=submit]')
+  try {
+    await page.fill('input[placeholder="Display name"]', 'Scene', { timeout: 4000 })
+    await page.click('text=Explore the empty wardrobe')
+  } catch {}
+  await page.waitForTimeout(400)
+  return true
+}
+
 const results = { captures: [], interruption: null, reducedMotion: null, fallback: null }
 const browser = await chromium.launch()
 
@@ -24,6 +40,9 @@ for (const [device, viewport] of [
   const page = await ctx.newPage()
   for (const station of STATIONS) {
     await page.goto(`${BASE}${routeFor(station)}?revamp&motion=full`, { waitUntil: 'networkidle' })
+    if (await ensureSignedIn(page)) {
+      await page.goto(`${BASE}${routeFor(station)}?revamp&motion=full`, { waitUntil: 'networkidle' })
+    }
     await page.evaluate(() => document.fonts.ready)
     // door ritual (0.25s) + longest flight (1.4s) + settle margin
     await page.waitForTimeout(2600)
@@ -39,6 +58,7 @@ for (const [device, viewport] of [
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
   await page.goto(`${BASE}/app?revamp&motion=full`, { waitUntil: 'networkidle' })
+  await ensureSignedIn(page)
   await page.waitForTimeout(1200)
 
   const probe = await page.evaluate(async () => {
@@ -116,6 +136,8 @@ for (const [device, viewport] of [
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
   await page.goto(`${BASE}/app/collection?revamp&motion=reduced`, { waitUntil: 'networkidle' })
+  await ensureSignedIn(page)
+  await page.goto(`${BASE}/app/collection?revamp&motion=reduced`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(700)
   const st = await page.evaluate(() => ({
     station: window.__scene?.getState().station,
@@ -133,6 +155,8 @@ for (const [device, viewport] of [
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
+  await page.goto(`${BASE}/app?revamp&scene=off`, { waitUntil: 'networkidle' })
+  await ensureSignedIn(page)
   await page.goto(`${BASE}/app?revamp&scene=off`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(500)
   const check = await page.evaluate(() => ({

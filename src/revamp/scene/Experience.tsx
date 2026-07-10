@@ -1,4 +1,5 @@
-import { ContactShadows } from '@react-three/drei'
+import { Suspense } from 'react'
+import { ContactShadows, Environment, Lightformer } from '@react-three/drei'
 import { Cabinet } from './cabinet/Cabinet'
 import { CameraRig } from './CameraRig'
 import { RailGarments } from './garments/RailGarments'
@@ -47,8 +48,17 @@ export function Experience() {
       {/* cool fill from the right so ebonized panels keep shape */}
       <pointLight position={[2.6, 1.5, 3.4]} intensity={64} color="#d8e0e8" />
 
+      {/* procedural environment — no network HDRI; brass/mirror need it to read */}
+      <Environment resolution={64} frames={1}>
+        <Lightformer intensity={1.1} position={[0, 4, 3]} rotation={[-Math.PI / 2, 0, 0]} scale={[7, 5, 1]} color="#e8ecef" />
+        <Lightformer intensity={0.7} position={[-4, 1.6, 2]} rotation={[0, Math.PI / 2, 0]} scale={[4, 2.4, 1]} color="#ffe4c0" />
+        <Lightformer intensity={0.5} position={[4, 1.4, 2.5]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} color="#cfd8e0" />
+      </Environment>
+
       <Room />
-      <Cabinet />
+      <Suspense fallback={null}>
+        <Cabinet />
+      </Suspense>
       <RailGarments />
       <ContactShadows position={[0, 0.002, 1.2]} opacity={0.45} blur={2.2} scale={7} frames={40} resolution={256} />
       <CameraRig />
