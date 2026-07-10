@@ -10,6 +10,7 @@
  */
 
 import type {
+  BoardElement,
   CollectionView,
   ImageKind,
   ImageStatus,
@@ -17,11 +18,16 @@ import type {
   ImportJobStatus,
   ItemImage,
   ItemProcessingStatus,
+  Outfit,
+  OutfitItem,
   OwnershipStatus,
   Profile,
   QualityPreference,
   SourceType,
+  StyleBoard,
   WardrobeItem,
+  WearEvent,
+  WearEventItem,
 } from './types'
 
 // ---------------------------------------------------------------------------
@@ -275,4 +281,260 @@ export const importJobToRow = (job: ImportJob): ImportJobRow => ({
   expires_at: job.expiresAt,
   created_at: job.createdAt,
   updated_at: job.updatedAt,
+})
+
+// ---------------------------------------------------------------------------
+// outfits
+// ---------------------------------------------------------------------------
+
+export interface OutfitRow {
+  id: string
+  user_id: string
+  name: string
+  occasion: string | null
+  season: string | null
+  notes: string | null
+  planned_for: string | null
+  cover_image_path: string | null
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+export const outfitFromRow = (row: OutfitRow): Outfit => ({
+  id: row.id,
+  userId: row.user_id,
+  name: row.name,
+  occasion: row.occasion,
+  season: row.season,
+  notes: row.notes,
+  plannedFor: row.planned_for,
+  coverImagePath: row.cover_image_path,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+  deletedAt: row.deleted_at,
+})
+
+export const outfitToRow = (outfit: Outfit): OutfitRow => ({
+  id: outfit.id,
+  user_id: outfit.userId,
+  name: outfit.name,
+  occasion: outfit.occasion,
+  season: outfit.season,
+  notes: outfit.notes,
+  planned_for: outfit.plannedFor,
+  cover_image_path: outfit.coverImagePath,
+  created_at: outfit.createdAt,
+  updated_at: outfit.updatedAt,
+  deleted_at: outfit.deletedAt,
+})
+
+// ---------------------------------------------------------------------------
+// outfit_items
+//
+// The table also carries created_at / updated_at (trigger-maintained); the
+// domain type deliberately omits them, so the row shape the client reads and
+// writes does too — extra columns returned by select('*') are ignored.
+// ---------------------------------------------------------------------------
+
+export interface OutfitItemRow {
+  id: string
+  outfit_id: string
+  item_id: string
+  layer_slot: string
+  sort_order: number
+  position_x: number | null
+  position_y: number | null
+  scale: number | null
+  rotation: number | null
+}
+
+export const outfitItemFromRow = (row: OutfitItemRow): OutfitItem => ({
+  id: row.id,
+  outfitId: row.outfit_id,
+  itemId: row.item_id,
+  layerSlot: row.layer_slot,
+  sortOrder: row.sort_order,
+  positionX: row.position_x,
+  positionY: row.position_y,
+  scale: row.scale,
+  rotation: row.rotation,
+})
+
+export const outfitItemToRow = (item: OutfitItem): OutfitItemRow => ({
+  id: item.id,
+  outfit_id: item.outfitId,
+  item_id: item.itemId,
+  layer_slot: item.layerSlot,
+  sort_order: item.sortOrder,
+  position_x: item.positionX,
+  position_y: item.positionY,
+  scale: item.scale,
+  rotation: item.rotation,
+})
+
+// ---------------------------------------------------------------------------
+// style_boards
+// ---------------------------------------------------------------------------
+
+export interface StyleBoardRow {
+  id: string
+  user_id: string
+  title: string
+  document_version: number
+  canvas_width: number
+  canvas_height: number
+  cover_image_path: string | null
+  export_image_path: string | null
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+export const styleBoardFromRow = (row: StyleBoardRow): StyleBoard => ({
+  id: row.id,
+  userId: row.user_id,
+  title: row.title,
+  documentVersion: row.document_version,
+  canvasWidth: row.canvas_width,
+  canvasHeight: row.canvas_height,
+  coverImagePath: row.cover_image_path,
+  exportImagePath: row.export_image_path,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+  deletedAt: row.deleted_at,
+})
+
+export const styleBoardToRow = (board: StyleBoard): StyleBoardRow => ({
+  id: board.id,
+  user_id: board.userId,
+  title: board.title,
+  document_version: board.documentVersion,
+  canvas_width: board.canvasWidth,
+  canvas_height: board.canvasHeight,
+  cover_image_path: board.coverImagePath,
+  export_image_path: board.exportImagePath,
+  created_at: board.createdAt,
+  updated_at: board.updatedAt,
+  deleted_at: board.deletedAt,
+})
+
+// ---------------------------------------------------------------------------
+// board_elements
+// ---------------------------------------------------------------------------
+
+export interface BoardElementRow {
+  id: string
+  board_id: string
+  user_id: string
+  kind: string
+  position_x: number
+  position_y: number
+  scale: number
+  rotation: number
+  z_index: number
+  locked: boolean
+  hidden: boolean
+  item_id: string | null
+  media_path: string | null
+  style: Record<string, unknown>
+  created_at: string
+  updated_at: string
+}
+
+export const boardElementFromRow = (row: BoardElementRow): BoardElement => ({
+  id: row.id,
+  boardId: row.board_id,
+  userId: row.user_id,
+  kind: row.kind,
+  positionX: row.position_x,
+  positionY: row.position_y,
+  scale: row.scale,
+  rotation: row.rotation,
+  zIndex: row.z_index,
+  locked: row.locked,
+  hidden: row.hidden,
+  itemId: row.item_id,
+  mediaPath: row.media_path,
+  style: { ...row.style },
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+})
+
+export const boardElementToRow = (element: BoardElement): BoardElementRow => ({
+  id: element.id,
+  board_id: element.boardId,
+  user_id: element.userId,
+  kind: element.kind,
+  position_x: element.positionX,
+  position_y: element.positionY,
+  scale: element.scale,
+  rotation: element.rotation,
+  z_index: element.zIndex,
+  locked: element.locked,
+  hidden: element.hidden,
+  item_id: element.itemId,
+  media_path: element.mediaPath,
+  style: { ...element.style },
+  created_at: element.createdAt,
+  updated_at: element.updatedAt,
+})
+
+// ---------------------------------------------------------------------------
+// wear_events
+// ---------------------------------------------------------------------------
+
+export interface WearEventRow {
+  id: string
+  user_id: string
+  worn_at: string
+  outfit_id: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export const wearEventFromRow = (row: WearEventRow): WearEvent => ({
+  id: row.id,
+  userId: row.user_id,
+  wornAt: row.worn_at,
+  outfitId: row.outfit_id,
+  notes: row.notes,
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+})
+
+export const wearEventToRow = (event: WearEvent): WearEventRow => ({
+  id: event.id,
+  user_id: event.userId,
+  worn_at: event.wornAt,
+  outfit_id: event.outfitId,
+  notes: event.notes,
+  created_at: event.createdAt,
+  updated_at: event.updatedAt,
+})
+
+// ---------------------------------------------------------------------------
+// wear_event_items
+//
+// Like outfit_items, the table's trigger-maintained created_at / updated_at
+// are deliberately absent from the domain type and this row shape.
+// ---------------------------------------------------------------------------
+
+export interface WearEventItemRow {
+  id: string
+  wear_event_id: string
+  item_id: string
+}
+
+export const wearEventItemFromRow = (row: WearEventItemRow): WearEventItem => ({
+  id: row.id,
+  wearEventId: row.wear_event_id,
+  itemId: row.item_id,
+})
+
+export const wearEventItemToRow = (item: WearEventItem): WearEventItemRow => ({
+  id: item.id,
+  wear_event_id: item.wearEventId,
+  item_id: item.itemId,
 })
