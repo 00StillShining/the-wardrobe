@@ -1,0 +1,206 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-6);
+  padding: var(--space-4) 0 var(--space-5);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statValue {
+  font-family: var(--font-serif);
+  font-weight: 550;
+  font-size: var(--text-2xl);
+}
+
+.statLabel {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}
+
+.statNote {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.figure {
+  margin: 0;
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--line);
+}
+
+.figTitle {
+  font-family: var(--font-serif);
+  font-weight: 550;
+  font-size: var(--text-l);
+  margin-bottom: var(--space-3);
+}
+
+.figNote {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}
+
+/* —— bar list —— */
+
+.barRow {
+  display: grid;
+  grid-template-columns: 110px 1fr 40px;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 3px 0;
+}
+
+.barLabel {
+  font-size: var(--text-s);
+  color: var(--text);
+}
+
+.barTrack {
+  height: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.barFill {
+  display: block;
+  height: 12px;
+  min-width: 2px;
+  border-radius: 0 3px 3px 0;
+  background: var(--bottle);
+}
+
+.barValue {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* —— cadence columns —— */
+
+.cadence {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  height: 96px;
+}
+
+.cadenceCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cadenceBar {
+  width: 100%;
+  max-width: 26px;
+  border-radius: 3px 3px 0 0;
+  background: var(--bottle);
+}
+
+.cadenceBar[data-zero] {
+  background: var(--line);
+}
+
+.cadenceLabel {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* —— swatches —— */
+
+.swatchRow {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.swatchCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.swatchChip {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--line-strong);
+}
+
+.swatchCount {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* —— table alternative —— */
+
+.tableAlt {
+  margin-top: var(--space-2);
+  font-size: var(--text-s);
+}
+
+.tableAlt summary {
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.tableAlt table {
+  margin-top: var(--space-2);
+  border-collapse: collapse;
+}
+
+.tableAlt th,
+.tableAlt td {
+  text-align: left;
+  padding: var(--space-1) var(--space-4) var(--space-1) 0;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+}
+
+.tableAlt th {
+  font-weight: 500;
+}
+
+/* —— item lists —— */
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--text);
+  font-size: var(--text-m);
+}
+
+.itemRow:hover {
+  background: var(--hover-veil);
+}
+
+.itemRowMeta {
+  color: var(--text-muted);
+  font-size: var(--text-s);
+}
+
+.drill {
+  margin-top: var(--space-2);
+}
