@@ -1,0 +1,42 @@
+.iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-h);
+  height: var(--control-h);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-ui);
+}
+
+.touch {
+  width: var(--control-h-touch);
+  height: var(--control-h-touch);
+}
+
+.iconbtn:hover:not(:disabled) {
+  background: var(--hover-veil);
+}
+.iconbtn:active:not(:disabled) {
+  background: var(--active-veil);
+}
+.iconbtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.iconbtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (pointer: coarse) {
+  .iconbtn {
+    width: var(--control-h-touch);
+    height: var(--control-h-touch);
+  }
+}

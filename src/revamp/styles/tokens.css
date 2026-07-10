@@ -1,0 +1,133 @@
+/* ————————————————————————————————————————————————————————————————
+   THE WARDROBE · rebuild tokens
+   Modern atelier. Sampled 2026-07-10 from the Midjourney material
+   tiles (generated reference-free, so colour-true) — NOT from the
+   station keyframes, whose lights measure gold-cast (hue ~54°,
+   sat 38–58%). Tiles: oak hue 34.5°, linen hue 39°, ebonized
+   neutral, bottle ~140°, oxblood ~358°.
+
+   Raw material colours never reach components directly; semantic
+   roles below flip with [data-surface]. Two easing curves app-wide.
+   ———————————————————————————————————————————————————————————————— */
+
+:root {
+  /* —— raw materials (sampled) —— */
+  --oak: #c9ab81;            /* pale quarter-sawn oak, tile median */
+  --oak-deep: #a3854f;       /* oak grain shadow */
+  --ebonized: #232323;       /* ebonized timber, tile mid */
+  --ebonized-deep: #141414;  /* tile darkest band */
+  --linen: #ddd2bc;          /* warm tailoring linen, tile median band */
+  --linen-raised: #ece5d5;   /* cleaner reading surface, tile light band */
+  --brass: #a2823f;          /* aged brass — hue held at 40°, sat controlled */
+  --brass-bright: #c9a967;   /* catch-light brass, large text / dark surfaces only */
+  --bottle: #2e4636;         /* bottle-green wool, lifted from tile for UI */
+  --bottle-deep: #1b2f22;    /* tile dark band */
+  --oxblood: #6f2a24;        /* leather tile hue 358°, lifted from L9% to L29% for UI */
+  --oxblood-deep: #451713;
+
+  /* —— architectural neutrals —— */
+  --room: #1b1a17;           /* matte charcoal, neutral not brown */
+  --room-raised: #262420;    /* chrome panels on dark */
+  --ink: #26221b;            /* deep neutral ink */
+  --ink-muted: #5c5544;      /* secondary text on light — ≥4.5:1 on linen-raised */
+  --linen-bright: #f4efe3;   /* text on dark */
+  --linen-dim: #b3ac97;      /* secondary text on dark — ≥4.5:1 on room */
+
+  /* —— lines —— */
+  --line-light: #c3b795;     /* hairlines on linen */
+  --line-dark: #3b382f;      /* hairlines on charcoal */
+
+  /* —— type —— */
+  --font-serif: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+  --text-xs: 0.75rem;        /* 12 — metadata, table captions */
+  --text-s: 0.8125rem;       /* 13 — dense desktop controls */
+  --text-m: 0.875rem;        /* 14 — desktop UI default */
+  --text-body: 1rem;         /* 16 — body, mobile floor */
+  --text-l: 1.125rem;        /* 18 */
+  --text-xl: 1.3125rem;      /* 21 — section titles (serif) */
+  --text-2xl: 1.625rem;      /* 26 — workspace titles (serif) */
+  --text-3xl: 2rem;          /* 32 — hero/editorial (serif) */
+
+  /* —— spacing (4-base) —— */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* —— radius (8px ceiling per plan §6.5) —— */
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+
+  /* —— z scale —— */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-backdrop: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* —— motion: the only two curves in the app —— */
+  --ease-camera: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-ui: cubic-bezier(0.32, 0.94, 0.6, 1);
+  --dur-fast: 150ms;
+  --dur-ui: 200ms;
+  --dur-slow: 300ms;
+
+  /* —— elevation: umber-tinted, never black —— */
+  --shadow-raised: 0 1px 2px rgba(38, 34, 27, 0.14), 0 2px 8px rgba(38, 34, 27, 0.1);
+  --shadow-overlay: 0 4px 12px rgba(20, 18, 14, 0.22), 0 12px 40px rgba(20, 18, 14, 0.24);
+
+  /* —— control metrics —— */
+  --control-h: 2.25rem;      /* 36 — desktop density */
+  --control-h-touch: 2.75rem;/* 44 — mobile touch floor */
+}
+
+/* ————————————————————————————————————————————————————————————————
+   Semantic roles. Default context = light workspace (linen).
+   App chrome and scene surrounds set data-surface="dark".
+   ———————————————————————————————————————————————————————————————— */
+
+:root,
+[data-surface='light'] {
+  --surface: var(--linen);
+  --surface-raised: var(--linen-raised);
+  --text: var(--ink);
+  --text-muted: var(--ink-muted);
+  --line: var(--line-light);
+  --line-strong: #7e755f;    /* control boundaries — ≥3:1 on both linen surfaces (WCAG 1.4.11) */
+  --accent: var(--bottle);
+  --accent-ink: var(--linen-bright);
+  --accent-line: #83621f;    /* brass darkened to ≥3:1 for indicator lines on linen */
+  --danger: var(--oxblood);
+  --danger-ink: var(--linen-bright);
+  --success: var(--bottle);
+  --focus: #7c5510;          /* dark brass — ≥3:1 on both linen surfaces */
+  --hover-veil: rgba(38, 34, 27, 0.06);
+  --active-veil: rgba(38, 34, 27, 0.11);
+}
+
+[data-surface='dark'] {
+  --surface: var(--room);
+  --surface-raised: var(--room-raised);
+  --text: var(--linen-bright);
+  --text-muted: var(--linen-dim);
+  --line: var(--line-dark);
+  --line-strong: #7a7466;    /* control boundaries — ≥3:1 on both dark surfaces */
+  --accent: var(--brass-bright);
+  --accent-ink: var(--room);
+  --accent-line: var(--brass-bright);
+  --danger: #8a3c31;         /* oxblood lifted — light ink on it clears 6.6:1 */
+  --danger-ink: var(--linen-bright);
+  --success: #6f8d7a;        /* bottle lifted for dark legibility */
+  --focus: var(--brass-bright);
+  --hover-veil: rgba(244, 239, 227, 0.07);
+  --active-veil: rgba(244, 239, 227, 0.12);
+}

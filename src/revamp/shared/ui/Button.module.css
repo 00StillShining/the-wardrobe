@@ -1,0 +1,114 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-h);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-m);
+  border: 1px solid transparent;
+  font-size: var(--text-m);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-ui), border-color var(--dur-fast) var(--ease-ui),
+    color var(--dur-fast) var(--ease-ui);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.touch {
+  height: var(--control-h-touch);
+  font-size: var(--text-body);
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 88%, var(--text));
+}
+.primary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 78%, var(--text));
+}
+
+.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--text);
+}
+.ghost:hover:not(:disabled) {
+  background: var(--hover-veil);
+}
+.ghost:active:not(:disabled) {
+  background: var(--active-veil);
+}
+
+.quiet {
+  background: transparent;
+  color: var(--text);
+}
+.quiet:hover:not(:disabled) {
+  background: var(--hover-veil);
+}
+.quiet:active:not(:disabled) {
+  background: var(--active-veil);
+}
+
+.danger {
+  background: var(--danger);
+  color: var(--danger-ink);
+}
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 88%, var(--text));
+}
+.danger:active:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 78%, var(--text));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.loading {
+  position: relative;
+  color: transparent !important;
+}
+.loading::after {
+  content: '';
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, currentColor 0%, var(--accent-ink));
+  border-top-color: transparent;
+  animation: spin 700ms linear infinite;
+}
+.ghost.loading::after,
+.quiet.loading::after {
+  border-color: var(--text);
+  border-top-color: transparent;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading::after {
+    animation: none;
+    border-top-color: inherit;
+    opacity: 0.5;
+  }
+}
+
+/* §6.6: 44px touch floor is automatic on coarse pointers, not an opt-in prop */
+@media (pointer: coarse) {
+  .btn {
+    height: var(--control-h-touch);
+    font-size: var(--text-body);
+  }
+}

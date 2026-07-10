@@ -1,0 +1,299 @@
+/* —— shared page scaffolding —— */
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-size: var(--text-2xl);
+}
+
+.job {
+  color: var(--text-muted);
+  font-size: var(--text-m);
+}
+
+.phase {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* —— scene + workspace split (desktop) —— */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 62fr) minmax(400px, 38fr);
+  min-height: 100%;
+}
+
+.scene {
+  background: var(--room);
+  border-right: 1px solid var(--line-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+}
+
+.sceneLabel {
+  font-family: var(--font-serif);
+  font-size: var(--text-l);
+  color: var(--text);
+}
+
+.sceneNote {
+  font-size: var(--text-xs);
+}
+
+.workspace {
+  padding: var(--space-8) var(--space-8) var(--space-12);
+  min-width: 0;
+}
+
+.workspaceWide {
+  padding: var(--space-8) var(--space-10) var(--space-12);
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+@media (max-width: 899px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  /* mobile is 2D-first: no idle scene behind lists (plan §8) */
+  .scene {
+    display: none;
+  }
+
+  .workspace,
+  .workspaceWide {
+    padding: var(--space-6) var(--space-4) var(--space-10);
+  }
+}
+
+/* —— collection toolbar + tiles —— */
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.toolbarRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.tileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-4);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tile > :first-child {
+  width: 100%;
+}
+
+/* —— overview (dark, camera-led menu placeholder) —— */
+
+.overview {
+  min-height: 100%;
+  background: var(--room);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-6);
+}
+
+.overviewInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  max-width: 760px;
+}
+
+.overviewTitle {
+  font-size: var(--text-3xl);
+}
+
+.overviewLede {
+  color: var(--text-muted);
+  font-size: var(--text-body);
+}
+
+/* Destination index: ruled archive rows, not cards (plan §6.5). */
+.destGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--space-10);
+  width: 100%;
+  margin-top: var(--space-6);
+}
+
+.destLink {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  grid-template-rows: auto auto;
+  align-items: baseline;
+  column-gap: var(--space-2);
+  row-gap: 2px;
+  text-align: left;
+  padding: var(--space-4) var(--space-2);
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--text);
+  transition: background var(--dur-fast) var(--ease-ui);
+}
+
+.destLink:hover {
+  background: var(--hover-veil);
+}
+
+.destLink svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.5;
+  color: var(--accent);
+  align-self: center;
+  grid-row: 1;
+}
+
+.destLabel {
+  font-family: var(--font-serif);
+  font-size: var(--text-l);
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.destJob {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+  grid-column: 2;
+  grid-row: 2;
+}
+
+@media (max-width: 899px) {
+  .destGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— import —— */
+
+/* Unframed ruled rows — cards are reserved for repeated content (plan §6.5). */
+.importChoices {
+  display: flex;
+  flex-direction: column;
+}
+
+.importRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-1);
+  border-top: 1px solid var(--line);
+}
+
+/* the page head already rules this edge */
+.importRow:first-child {
+  border-top: 0;
+}
+
+.importRow svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+  color: var(--accent);
+  flex: none;
+}
+
+.importText {
+  flex: 1;
+  min-width: 0;
+}
+
+.importText h3 {
+  font-size: var(--text-l);
+}
+
+.importText p {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}
+
+@media (max-width: 899px) {
+  .importRow {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    align-items: start;
+    row-gap: var(--space-3);
+  }
+  .importRow svg {
+    margin-top: 2px;
+  }
+  .importText,
+  .importRow > :last-child {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* —— settings —— */
+
+.settingsNote {
+  color: var(--text-muted);
+  font-size: var(--text-m);
+}
+
+/* —— auth —— */
+
+.auth {
+  min-height: 100dvh;
+  background: var(--room);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+.authPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: min(380px, 100%);
+  padding: var(--space-8);
+  background: var(--surface-raised);
+  color: var(--text);
+  border-radius: var(--radius-l);
+  border: 1px solid var(--line);
+}
+
+.authTitle {
+  font-size: var(--text-2xl);
+}
+
+.authNote {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}

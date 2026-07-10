@@ -1,0 +1,61 @@
+.group {
+  display: inline-flex;
+  margin: 0;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--surface) 60%, var(--surface-raised));
+  gap: 2px;
+}
+
+.group:disabled {
+  opacity: 0.45;
+}
+
+.seg {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: calc(var(--control-h) - 8px);
+  padding: 0 var(--space-3);
+  border-radius: calc(var(--radius-m) - 2px);
+  font-size: var(--text-s);
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-ui), color var(--dur-fast) var(--ease-ui);
+}
+
+.seg:hover {
+  color: var(--text);
+}
+
+.seg[data-checked] {
+  background: var(--surface-raised);
+  color: var(--text);
+  box-shadow: var(--shadow-raised);
+}
+
+/* the native radio carries focus + semantics; paint its ring on the segment */
+.radio {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  appearance: none;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+.radio:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* full 44px segments on touch — the group grows outward, not the segments inward */
+@media (pointer: coarse) {
+  .seg {
+    height: var(--control-h-touch);
+    padding: 0 var(--space-4);
+    font-size: var(--text-body);
+  }
+}

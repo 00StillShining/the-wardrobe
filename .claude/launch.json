@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wardrobe",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/stillshining/the-wardrobe", "run", "dev", "--", "--host", "127.0.0.1"],
+      "port": 5183
+    }
+  ]
+}
