@@ -46,6 +46,15 @@ export function ItemDetail() {
     onError: () => toast('Archiving failed — try again.', { tone: 'danger' }),
   })
 
+  const logWorn = useMutation({
+    mutationFn: () => backend.wear.logWear({ wornAt: new Date().toISOString(), itemIds: [itemId] }),
+    onSuccess: () => {
+      invalidate()
+      toast('Logged as worn today', { tone: 'success' })
+    },
+    onError: () => toast('Could not log the wear.', { tone: 'danger' }),
+  })
+
   const remove = useMutation({
     mutationFn: () => backend.wardrobe.softDelete(itemId),
     onSuccess: () => {
@@ -144,6 +153,9 @@ export function ItemDetail() {
       <div className={s.commands}>
         <Button variant="primary" onClick={() => setEditOpen(true)}>
           Edit
+        </Button>
+        <Button onClick={() => logWorn.mutate()} loading={logWorn.isPending}>
+          Log worn today
         </Button>
         <Button onClick={() => archive.mutate()} loading={archive.isPending} disabled={it.ownershipStatus === 'archived'}>
           {it.ownershipStatus === 'archived' ? 'Archived' : 'Archive'}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Layers, Palette } from 'lucide-react'
+import { Palette } from 'lucide-react'
 import s from './placeholders.module.css'
 import { DESTINATIONS } from '../nav'
 import { Button, EmptyState, InlineError, Tabs, TextField } from '../../shared/ui'
@@ -9,6 +9,9 @@ import { CollectionView } from '../../features/collection/CollectionView'
 import { ItemDetail } from '../../features/collection/ItemDetail'
 import { SeedControls } from '../../features/collection/SeedControls'
 import { ImportFlow } from '../../features/import/ImportFlow'
+import { InsightsView } from '../../features/insights/InsightsView'
+import { OutfitsList } from '../../features/outfits/OutfitsList'
+import { OutfitStudio } from '../../features/outfits/OutfitStudio'
 
 function PageHead({ title, job, phase }: { title: string; job: string; phase: string }) {
   return (
@@ -71,13 +74,25 @@ export function OutfitsPage() {
   return (
     <div className={s.workspacePane}>
       <section className={s.workspace}>
-        <PageHead title="Outfit Studio" job="Assemble, save and revisit outfits." phase="Phase 6" />
-        <EmptyState
-          figure={<Layers aria-hidden />}
-          title="No outfits yet"
-          hint="Outfits are layered from your garment cutouts — the studio opens once the collection exists."
-          action={<Button disabled>New outfit</Button>}
-        />
+        <header className={s.head}>
+          <h1 className={s.title}>Outfit Studio</h1>
+          <p className={s.job}>Assemble, save and revisit outfits.</p>
+        </header>
+        <OutfitsList />
+      </section>
+    </div>
+  )
+}
+
+export function OutfitStudioPage() {
+  return (
+    <div className={s.workspacePane}>
+      <section className={s.workspace}>
+        <header className={s.head}>
+          <h1 className={s.title}>Outfit Studio</h1>
+          <p className={s.job}>A flat editorial look — layered from your real cutouts, never a fake try-on.</p>
+        </header>
+        <OutfitStudio />
       </section>
     </div>
   )
@@ -103,11 +118,11 @@ export function InsightsPage() {
   return (
     <div className={s.workspacePane}>
       <section className={s.workspace}>
-        <PageHead title="Insights" job="Understand value, wear, gaps and purchases." phase="Phase 8" />
-        <EmptyState
-          title="Not enough data yet"
-          hint="Insights are computed from your real wardrobe only — no sample retailer data, ever. Add garments and wear history first."
-        />
+        <header className={s.head}>
+          <h1 className={s.title}>Insights</h1>
+          <p className={s.job}>Understand value, wear, gaps and purchases — from your real data only.</p>
+        </header>
+        <InsightsView />
       </section>
     </div>
   )
