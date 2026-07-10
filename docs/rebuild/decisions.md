@@ -23,12 +23,12 @@ Phase 0 deliverable · started 2026-07-10 · per plan §20, every decision gets 
 
 | ID | Decision | Status | Owner | Notes |
 |---|---|---|---|---|
-| D-13 | Approve baseline checkpoint commit of the dirty worktree (25 modified + 13 untracked files, one coherent hardening pass) before any rebuild branch is created | **PENDING USER** | User | Proposed single commit; message drafted in the Phase 0 report. Plan §13 forbids proceeding without this. |
+| D-13 | Approve baseline checkpoint commit of the dirty worktree (25 modified + 13 untracked files, one coherent hardening pass) before any rebuild branch is created | **RESOLVED 2026-07-10** | User | User approved a single commit → `1807153` on `main`. |
 | D-14 | `06-pinboard-style-studio.png` keyframe was selected by coordinate mis-click — re-review its 3 sibling candidates (job URL in sidecar) before Style Studio visual work | OPEN | User | Defer to Phase 7 at the latest; plan §7 already forbids using it as final layout without review. |
 | D-15 | Midjourney pack Round 3 is absent from the delivered package (folders map to rounds 1,2,4,5,6,7,8) with no explanation | OPEN | User | Confirm whether Round 3 was skipped/rejected intentionally or assets are missing. No rebuild work blocks on this. |
 | D-16 | Material tiles: derive PBR maps from the Midjourney tiles (seam-test first) vs. license true seamless PBR materials colour-matched to them | OPEN | User→Claude proposal at Phase 2 | Plan §7 recommends licensed PBR; tiles carry explicit not-PBR/seam-unverified warnings. |
 | D-17 | Add `esbuild` as an explicit devDependency (currently only transitive via vite; `scripts/run-tests.mjs` imports it directly) | OPEN | Claude (needs no approval, folded into next infra commit) | Fragile under vite upgrades or strict installers. |
-| D-18 | Rebuild branch name | **PENDING USER** | User | Proposed: `rebuild/modern-atelier`. |
+| D-18 | Rebuild branch name | **RESOLVED 2026-07-10** | User | `rebuild/modern-atelier`, created from `main` at `1807153`. |
 | D-19 | Placement of `CLAUDE_FABLE_5_REBUILD_EXECUTION_PLAN.md` + `MIDJOURNEY_PROMPT_PACK.md` (repo root vs `docs/`) | PENDING USER | User | Both should be committed either way. ⚠ A live vim session (`.MIDJOURNEY_PROMPT_PACK.md.swp`, pid 44185 at audit time) had the prompt pack open — save/close before committing it so no unsaved edits are lost. Do not move the file while that session is open. |
 
 ## Resolved
