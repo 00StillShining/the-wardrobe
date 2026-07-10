@@ -6,12 +6,14 @@ import { DESTINATIONS } from '../nav'
 import {
   Button,
   EmptyState,
+  InlineError,
   Menu,
   Segmented,
   Skeleton,
   Tabs,
   TextField,
 } from '../../shared/ui'
+import { useBackend } from '../backend'
 
 function PageHead({ title, job, phase }: { title: string; job: string; phase: string }) {
   return (
@@ -187,21 +189,65 @@ export function SettingsPage() {
 
 export function SignInPage() {
   const navigate = useNavigate()
+  const backend = useBackend()
+  const [email, setEmail] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [linkSent, setLinkSent] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    const value = email.trim()
+    if (!value || !value.includes('@')) {
+      setError('Enter the email address for your wardrobe.')
+      return
+    }
+    setBusy(true)
+    setError(null)
+    try {
+      const result = await backend.auth.signInWithEmail(value)
+      if (result.kind === 'session') {
+        const next = new URLSearchParams(window.location.search).get('next')
+        navigate(next && next.startsWith('/') ? next : '/app', { replace: true })
+      } else {
+        setLinkSent(true)
+        setBusy(false)
+      }
+    } catch {
+      setError('Sign-in failed. Check the address and try again.')
+      setBusy(false)
+    }
+  }
+
   return (
     <div className={s.auth} data-surface="dark">
-      <div className={s.authPanel} data-surface="light">
+      <form className={s.authPanel} data-surface="light" onSubmit={submit}>
         <p className="wordmark">The Wardrobe</p>
         <h1 className={s.authTitle}>Sign in</h1>
-        <TextField label="Email" type="email" placeholder="you@example.com" autoComplete="email" />
-        <Button variant="primary" disabled>
-          Send magic link
-        </Button>
-        {/* the operative Phase 1 action gets a real affordance */}
-        <Button variant="ghost" onClick={() => navigate('/app')}>
-          Continue to the app shell
-        </Button>
-        <p className={s.authNote}>Accounts arrive in Phase 3 — this screen is layout only.</p>
-      </div>
+        {linkSent ? (
+          <p>Check your email — the sign-in link is on its way.</p>
+        ) : (
+          <>
+            <TextField
+              label="Email"
+              type="email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {error && <InlineError>{error}</InlineError>}
+            <Button variant="primary" type="submit" loading={busy}>
+              {backend.mode === 'local' ? 'Sign in' : 'Send magic link'}
+            </Button>
+          </>
+        )}
+        <p className={s.authNote}>
+          {backend.mode === 'local'
+            ? 'No cloud account is configured yet — your wardrobe is stored privately on this device and moves to your account when cloud sync is connected.'
+            : 'We email you a sign-in link. No passwords.'}
+        </p>
+      </form>
     </div>
   )
 }

@@ -31,6 +31,15 @@ Phase 0 deliverable · started 2026-07-10 · per plan §20, every decision gets 
 | D-18 | Rebuild branch name | **RESOLVED 2026-07-10** | User | `rebuild/modern-atelier`, created from `main` at `1807153`. |
 | D-19 | Placement of `CLAUDE_FABLE_5_REBUILD_EXECUTION_PLAN.md` + `MIDJOURNEY_PROMPT_PACK.md` (repo root vs `docs/`) | PENDING USER | User | Both should be committed either way. ⚠ A live vim session (`.MIDJOURNEY_PROMPT_PACK.md.swp`, pid 44185 at audit time) had the prompt pack open — save/close before committing it so no unsaved edits are lost. Do not move the file while that session is open. |
 
+## Phase 3 gate status (2026-07-10)
+
+Verified locally: session guard with preserved deep-link, magic-link-shaped sign-in (local mode
+resolves immediately), onboarding gate, session survives refresh, no privileged keys anywhere in
+client output, migrations + RLS authored and unit-covered where runnable. **Blocked on D-01/D-02
+(no Docker/Supabase CLI/credentials on this machine):** executing migrations, live RLS two-user
+test (`scripts/rls-verify.mjs` is ready to run), storage policies, real magic-link round-trip.
+The app runs in honest local-first mode behind the same interfaces until credentials arrive.
+
 ## Resolved
 
 | ID | Decision | Resolved | By | Outcome |
