@@ -263,7 +263,7 @@ export interface ImageProcessingService {
 }
 
 // ---------------------------------------------------------------------------
-// Thin contracts for later phases (interfaces only — no implementations yet)
+// Outfits, style boards and wear tracking (Phases 6–8)
 // ---------------------------------------------------------------------------
 
 export interface OutfitCreate {
@@ -288,11 +288,21 @@ export interface OutfitItemInput {
 }
 
 export interface OutfitRepository {
+  /** Non-deleted outfits, newest first. */
   list(): Promise<Outfit[]>
+  /** Null when missing or soft-deleted; items come from listItems. */
   get(id: string): Promise<Outfit | null>
-  create(input: OutfitCreate): Promise<Outfit>
+  /** Create the outfit, optionally with its initial item set. */
+  create(input: OutfitCreate, items?: OutfitItemInput[]): Promise<Outfit>
   update(id: string, patch: OutfitUpdate): Promise<Outfit>
+  /**
+   * Copy an outfit and its items into a new outfit. The copy's name carries
+   * a ' (copy)' suffix so the two stay distinguishable in lists.
+   */
+  duplicate(id: string): Promise<Outfit>
+  /** Sets deleted_at; idempotent on an already-deleted outfit. */
   softDelete(id: string): Promise<void>
+  /** The outfit's items, ordered by sortOrder. */
   listItems(outfitId: string): Promise<OutfitItem[]>
   /** Replaces the outfit's item set atomically. */
   setItems(outfitId: string, items: OutfitItemInput[]): Promise<OutfitItem[]>
@@ -325,13 +335,29 @@ export interface BoardElementInput {
 }
 
 export interface StyleBoardRepository {
+  /** Non-deleted boards, newest first. */
   list(): Promise<StyleBoard[]>
+  /** Null when missing or soft-deleted; elements come from listElements. */
   get(id: string): Promise<StyleBoard | null>
+  /** New board with documentVersion 1. */
   create(input: StyleBoardCreate): Promise<StyleBoard>
+  /**
+   * Patch title / canvas size / cover / export paths.
+   *
+   * documentVersion bump rule: changing the canvas size bumps documentVersion
+   * (the canvas is part of the document); title / cover / export path changes
+   * are metadata and do not.
+   */
   update(id: string, patch: StyleBoardUpdate): Promise<StyleBoard>
+  /** Sets deleted_at; idempotent on an already-deleted board. */
   softDelete(id: string): Promise<void>
+  /** The board's elements, ordered by zIndex. */
   listElements(boardId: string): Promise<BoardElement[]>
-  /** Replaces the board's element set atomically. */
+  /**
+   * Replaces the board's element set atomically and bumps documentVersion.
+   * Elements keep their identity when `id` is passed; timestamps reflect the
+   * latest save.
+   */
   saveElements(boardId: string, elements: BoardElementInput[]): Promise<BoardElement[]>
 }
 
@@ -344,9 +370,23 @@ export interface WearEventCreate {
 }
 
 export interface WearRepository {
+  /**
+   * Create the event plus one wear_event_items row per (deduplicated) item,
+   * bumping each item's cached wearCount and moving lastWornAt forward when
+   * this event is the item's most recent wear. Rejects with 'validation'
+   * when itemIds is empty or names an unknown item.
+   */
   logWear(input: WearEventCreate): Promise<WearEvent>
+  /** Events with wornAt inside the inclusive range, newest first. */
   listEvents(params?: { from?: string; to?: string }): Promise<WearEvent[]>
   listEventItems(eventId: string): Promise<WearEventItem[]>
+  /** Every event that includes the item, newest first. */
+  listForItem(itemId: string): Promise<WearEvent[]>
+  /**
+   * Delete the event and honestly reverse its effect on the cached counters:
+   * each affected item's wearCount decrements (floored at zero) and
+   * lastWornAt is recomputed from the remaining events (null when none).
+   */
   removeEvent(id: string): Promise<void>
 }
 
@@ -361,5 +401,8 @@ export interface Backend {
   wardrobe: WardrobeRepository
   itemImages: ItemImageRepository
   importJobs: ImportJobRepository
+  outfits: OutfitRepository
+  styleBoards: StyleBoardRepository
+  wear: WearRepository
   media: MediaService
 }
