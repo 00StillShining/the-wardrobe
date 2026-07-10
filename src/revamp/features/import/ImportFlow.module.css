@@ -1,0 +1,157 @@
+.choose {
+  display: flex;
+  flex-direction: column;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-1);
+  border-top: 1px solid var(--line);
+}
+
+.optionRow:first-child,
+.resumeBlock + .optionRow {
+  border-top: 0;
+}
+
+.optionRow svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+  color: var(--accent);
+  flex: none;
+}
+
+.optionText {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionText h3 {
+  font-size: var(--text-l);
+}
+
+.optionText p {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.resumeBlock {
+  padding-bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.resumeBlock h3 {
+  font-size: var(--text-l);
+}
+
+.resumeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
+}
+
+.note {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  border-top-color: var(--accent);
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+.review,
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.review h3,
+.details h3 {
+  font-size: var(--text-xl);
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.compareCell {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--line);
+}
+
+.compareCell[data-selected] {
+  border-color: var(--accent-line);
+}
+
+.compareCell img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+}
+
+/* transparency reads against a checker, not against fake white */
+.checker {
+  background-image: linear-gradient(45deg, var(--line) 25%, transparent 25%, transparent 75%, var(--line) 75%),
+    linear-gradient(45deg, var(--line) 25%, transparent 25%, transparent 75%, var(--line) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 899px) {
+  .compare {
+    grid-template-columns: 1fr;
+  }
+}

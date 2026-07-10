@@ -249,6 +249,13 @@ export interface ProcessedImages {
   palette: string[]
   width: number
   height: number
+  /**
+   * 0..1 — how confident the processor is that the cutout is real (uniform
+   * background found, subject isolated). Low confidence must surface the
+   * keep-original fallback in review (plan §9.5); a rectangular original is
+   * never presented as a successful cutout.
+   */
+  keyConfidence?: number
 }
 
 export interface ImageProcessingService {

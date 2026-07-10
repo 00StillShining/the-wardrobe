@@ -1,19 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Camera, Image, Layers, Palette } from 'lucide-react'
+import { Layers, Palette } from 'lucide-react'
 import s from './placeholders.module.css'
 import { DESTINATIONS } from '../nav'
-import {
-  Button,
-  EmptyState,
-  InlineError,
-  Menu,
-  Segmented,
-  Skeleton,
-  Tabs,
-  TextField,
-} from '../../shared/ui'
+import { Button, EmptyState, InlineError, Tabs, TextField } from '../../shared/ui'
 import { useBackend } from '../backend'
+import { CollectionView } from '../../features/collection/CollectionView'
+import { ItemDetail } from '../../features/collection/ItemDetail'
+import { ImportFlow } from '../../features/import/ImportFlow'
 
 function PageHead({ title, job, phase }: { title: string; job: string; phase: string }) {
   return (
@@ -49,48 +43,24 @@ export function OverviewPage() {
 }
 
 export function CollectionPage() {
-  const [view, setView] = useState<'grid' | 'rail' | 'list'>('grid')
   return (
     <div className={s.workspacePane}>
       <section className={s.workspace}>
-        <PageHead
-          title="Collection"
-          job="Search, browse, filter, edit and select garments."
-          phase="Phase 4–5"
-        />
-        <div className={s.toolbar}>
-          <TextField label="Search" placeholder="Name, brand, notes…" type="search" />
-          <div className={s.toolbarRow}>
-            <Segmented
-              label="View"
-              value={view}
-              onChange={setView}
-              options={[
-                { value: 'grid', label: 'Grid' },
-                { value: 'rail', label: 'Rail' },
-                { value: 'list', label: 'List' },
-              ]}
-            />
-            <Menu
-              trigger="Sort · Newest"
-              items={[
-                { label: 'Newest', onSelect: () => {} },
-                { label: 'Name', onSelect: () => {} },
-                { label: 'Brand', onSelect: () => {} },
-                { label: 'Most worn', onSelect: () => {} },
-              ]}
-            />
-          </div>
-        </div>
-        <div className={s.tileGrid} aria-label="Loading placeholder">
-          {Array.from({ length: 8 }, (_, i) => (
-            <div key={i} className={s.tile}>
-              <Skeleton height={140} radius="m" />
-              <Skeleton height="0.8rem" width="70%" radius="s" />
-              <Skeleton height="0.7rem" width="45%" radius="s" />
-            </div>
-          ))}
-        </div>
+        <header className={s.head}>
+          <h1 className={s.title}>Collection</h1>
+          <p className={s.job}>Search, browse, filter, edit and select garments.</p>
+        </header>
+        <CollectionView />
+      </section>
+    </div>
+  )
+}
+
+export function ItemDetailPage() {
+  return (
+    <div className={s.workspacePane}>
+      <section className={s.workspace}>
+        <ItemDetail />
       </section>
     </div>
   )
@@ -146,25 +116,11 @@ export function ImportPage() {
   return (
     <div className={s.workspacePane}>
       <section className={s.workspace}>
-        <PageHead title="Add / Import" job="Add photographs, URLs or supported receipts." phase="Phase 4" />
-      <div className={s.importChoices}>
-        <div className={s.importRow}>
-          <Image aria-hidden />
-          <div className={s.importText}>
-            <h3>Choose a photo</h3>
-            <p>JPEG, PNG or WebP. The background is removed automatically for review.</p>
-          </div>
-          <Button disabled>Choose photo</Button>
-        </div>
-        <div className={s.importRow}>
-          <Camera aria-hidden />
-          <div className={s.importText}>
-            <h3>Capture</h3>
-            <p>Use the camera on supported mobile devices.</p>
-          </div>
-          <Button disabled>Open camera</Button>
-        </div>
-      </div>
+        <header className={s.head}>
+          <h1 className={s.title}>Add / Import</h1>
+          <p className={s.job}>Add a garment photograph. URLs and receipts arrive later, honestly.</p>
+        </header>
+        <ImportFlow />
       </section>
     </div>
   )

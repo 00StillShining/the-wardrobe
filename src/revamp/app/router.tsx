@@ -5,6 +5,7 @@ import {
   CollectionPage,
   ImportPage,
   InsightsPage,
+  ItemDetailPage,
   OutfitsPage,
   OverviewPage,
   SettingsPage,
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <OverviewPage /> },
       { path: 'collection', element: <CollectionPage /> },
+      { path: 'collection/:itemId', element: <ItemDetailPage /> },
       { path: 'outfits', element: <OutfitsPage /> },
       { path: 'style', element: <StylePage /> },
       { path: 'insights', element: <InsightsPage /> },

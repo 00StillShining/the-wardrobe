@@ -2,9 +2,12 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
-  timeout: 30_000,
+  // Legacy entry tests run 22–27 s alone (first-run garment prep blocks
+  // entry — known defect the rebuild removes); under a parallel suite they
+  // need headroom. The rebuild's own tests finish in single-digit seconds.
+  timeout: 60_000,
   expect: {
-    timeout: 10_000,
+    timeout: 20_000,
   },
   fullyParallel: true,
   reporter: [['list']],
