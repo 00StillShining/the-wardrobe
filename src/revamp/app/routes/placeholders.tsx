@@ -23,24 +23,14 @@ function PageHead({ title, job, phase }: { title: string; job: string; phase: st
   )
 }
 
-function ScenePane({ label }: { label: string }) {
-  return (
-    <aside className={s.scene} data-surface="dark" aria-hidden>
-      <span className={s.sceneLabel}>{label}</span>
-      <span className={s.sceneNote}>3D scene · Phase 2</span>
-    </aside>
-  )
-}
-
 export function OverviewPage() {
   return (
     <div className={s.overview} data-surface="dark">
-      <div className={s.overviewInner}>
+      <div className={s.overviewPanel}>
         <p className="wordmark">The Wardrobe</p>
         <h1 className={s.overviewTitle}>Your archive, composed.</h1>
         <p className={s.overviewLede}>
-          The camera-led wardrobe scene arrives in Phase 2. Every destination below already works as
-          plain navigation — the scene will never be the only way in.
+          Every destination below is plain navigation too — the scene is never the only way in.
         </p>
         <nav className={s.destGrid} aria-label="Destinations">
           {DESTINATIONS.filter((d) => d.id !== 'overview').map((d) => (
@@ -59,8 +49,7 @@ export function OverviewPage() {
 export function CollectionPage() {
   const [view, setView] = useState<'grid' | 'rail' | 'list'>('grid')
   return (
-    <div className={s.split}>
-      <ScenePane label="Rail · shelves · archive drawers" />
+    <div className={s.workspacePane}>
       <section className={s.workspace}>
         <PageHead
           title="Collection"
@@ -107,8 +96,7 @@ export function CollectionPage() {
 
 export function OutfitsPage() {
   return (
-    <div className={s.split}>
-      <ScenePane label="Mirror · dress form" />
+    <div className={s.workspacePane}>
       <section className={s.workspace}>
         <PageHead title="Outfit Studio" job="Assemble, save and revisit outfits." phase="Phase 6" />
         <EmptyState
@@ -124,34 +112,39 @@ export function OutfitsPage() {
 
 export function StylePage() {
   return (
-    <section className={s.workspaceWide}>
-      <PageHead title="Style Studio" job="Create editorial boards and exports." phase="Phase 7" />
-      <EmptyState
-        figure={<Palette aria-hidden />}
-        title="No boards yet"
-        hint="Boards compose cutouts, swatches and captions on a linen canvas, then export at print resolution."
-        action={<Button disabled>New board</Button>}
-      />
-    </section>
+    <div className={s.workspacePane}>
+      <section className={s.workspace}>
+        <PageHead title="Style Studio" job="Create editorial boards and exports." phase="Phase 7" />
+        <EmptyState
+          figure={<Palette aria-hidden />}
+          title="No boards yet"
+          hint="Boards compose cutouts, swatches and captions on a linen canvas, then export at print resolution."
+          action={<Button disabled>New board</Button>}
+        />
+      </section>
+    </div>
   )
 }
 
 export function InsightsPage() {
   return (
-    <section className={s.workspaceWide}>
-      <PageHead title="Insights" job="Understand value, wear, gaps and purchases." phase="Phase 8" />
-      <EmptyState
-        title="Not enough data yet"
-        hint="Insights are computed from your real wardrobe only — no sample retailer data, ever. Add garments and wear history first."
-      />
-    </section>
+    <div className={s.workspacePane}>
+      <section className={s.workspace}>
+        <PageHead title="Insights" job="Understand value, wear, gaps and purchases." phase="Phase 8" />
+        <EmptyState
+          title="Not enough data yet"
+          hint="Insights are computed from your real wardrobe only — no sample retailer data, ever. Add garments and wear history first."
+        />
+      </section>
+    </div>
   )
 }
 
 export function ImportPage() {
   return (
-    <section className={s.workspaceWide}>
-      <PageHead title="Add / Import" job="Add photographs, URLs or supported receipts." phase="Phase 4" />
+    <div className={s.workspacePane}>
+      <section className={s.workspace}>
+        <PageHead title="Add / Import" job="Add photographs, URLs or supported receipts." phase="Phase 4" />
       <div className={s.importChoices}>
         <div className={s.importRow}>
           <Image aria-hidden />
@@ -170,7 +163,8 @@ export function ImportPage() {
           <Button disabled>Open camera</Button>
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   )
 }
 

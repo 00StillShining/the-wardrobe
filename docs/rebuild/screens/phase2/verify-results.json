@@ -1,0 +1,35 @@
+{
+  "captures": [
+    "desktop-1440/overview.png",
+    "desktop-1440/collection.png",
+    "desktop-1440/outfits.png",
+    "desktop-1440/style.png",
+    "desktop-1440/insights.png",
+    "desktop-1440/import.png",
+    "desktop-1280/overview.png",
+    "desktop-1280/collection.png",
+    "desktop-1280/outfits.png",
+    "desktop-1280/style.png",
+    "desktop-1280/insights.png",
+    "desktop-1280/import.png"
+  ],
+  "interruption": {
+    "samples": 53,
+    "maxStep": 0.7980834004099452,
+    "maxAngPerSample": 12.957769813217686,
+    "finalStation": "collection",
+    "stillFlying": false,
+    "pass": true
+  },
+  "reducedMotion": {
+    "station": "collection",
+    "flying": false,
+    "pass": true
+  },
+  "fallback": {
+    "canvases": 0,
+    "navLinks": 16,
+    "routeWorks": true,
+    "pass": true
+  }
+}

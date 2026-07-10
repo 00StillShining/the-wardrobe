@@ -23,36 +23,18 @@
   color: var(--text-muted);
 }
 
-/* —— scene + workspace split (desktop) —— */
+/* —— workspace pane over the persistent scene (desktop) —— */
 
-.split {
+.workspacePane {
   display: grid;
   grid-template-columns: minmax(0, 62fr) minmax(400px, 38fr);
   min-height: 100%;
 }
 
-.scene {
-  background: var(--room);
-  border-right: 1px solid var(--line-dark);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  color: var(--text-muted);
-}
-
-.sceneLabel {
-  font-family: var(--font-serif);
-  font-size: var(--text-l);
-  color: var(--text);
-}
-
-.sceneNote {
-  font-size: var(--text-xs);
-}
-
 .workspace {
+  grid-column: 2;
+  background: var(--surface);
+  border-left: 1px solid var(--line-dark);
   padding: var(--space-8) var(--space-8) var(--space-12);
   min-width: 0;
 }
@@ -64,13 +46,14 @@
 }
 
 @media (max-width: 899px) {
-  .split {
+  .workspacePane {
     grid-template-columns: 1fr;
   }
 
-  /* mobile is 2D-first: no idle scene behind lists (plan §8) */
-  .scene {
-    display: none;
+  /* mobile is 2D-first: the scene isn't mounted, the workspace is the page */
+  .workspace {
+    grid-column: 1;
+    border-left: 0;
   }
 
   .workspace,
@@ -112,25 +95,38 @@
   width: 100%;
 }
 
-/* —— overview (dark, camera-led menu placeholder) —— */
+/* —— overview: hero panel in the right 38%, scene composes on the left —— */
 
 .overview {
   min-height: 100%;
-  background: var(--room);
+  display: grid;
+  grid-template-columns: minmax(0, 62fr) minmax(400px, 38fr);
   color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-10) var(--space-6);
 }
 
-.overviewInner {
+.overviewPanel {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  justify-content: center;
   gap: var(--space-4);
-  max-width: 760px;
+  padding: var(--space-10) var(--space-8);
+}
+
+@media (max-width: 899px) {
+  .overview {
+    grid-template-columns: 1fr;
+    background: var(--room);
+    align-items: center;
+  }
+
+  .overviewPanel {
+    grid-column: 1;
+    align-items: center;
+    text-align: center;
+    max-width: 560px;
+    margin-inline: auto;
+  }
 }
 
 .overviewTitle {
@@ -145,10 +141,9 @@
 /* Destination index: ruled archive rows, not cards (plan §6.5). */
 .destGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: var(--space-10);
+  grid-template-columns: 1fr;
   width: 100%;
-  margin-top: var(--space-6);
+  margin-top: var(--space-4);
 }
 
 .destLink {

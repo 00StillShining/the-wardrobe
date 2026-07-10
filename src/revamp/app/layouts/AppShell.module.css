@@ -107,13 +107,33 @@
   background: var(--surface-raised);
 }
 
-/* —— main workspace —— */
-.main {
+/* —— content cell: persistent scene layer under a transparent main —— */
+.contentCell {
   grid-area: main;
-  background: var(--surface);
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  background: transparent;
   color: var(--text);
   overflow-y: auto;
   min-width: 0;
+}
+
+/* routes with no scene framing (settings, fixtures) cover it fully */
+.mainOpaque {
+  background: var(--surface);
+}
+
+@media (max-width: 899px) {
+  .main {
+    background: var(--surface);
+  }
 }
 
 /* —— bottom nav (mobile only) —— */

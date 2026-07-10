@@ -1,15 +1,38 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Plus, Settings } from 'lucide-react'
 import s from './AppShell.module.css'
 import { DESTINATIONS, MOBILE_NAV } from '../nav'
 import { Button, IconButton } from '../../shared/ui'
+import { SceneMount } from '../../scene/SceneMount'
+import { stationForPath } from '../../scene/stations'
+import { useScene } from '../../stores/scene'
+
+function useIsDesktop() {
+  const [desktop, setDesktop] = useState(
+    () => window.matchMedia('(min-width: 900px)').matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 900px)')
+    const onChange = () => setDesktop(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return desktop
+}
 
 export function AppShell() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
   const firstRender = useRef(true)
+  const isDesktop = useIsDesktop()
+
+  // route → camera (mobile is 2D-first: the scene never runs there)
+  useEffect(() => {
+    if (isDesktop) useScene.getState().routeChanged(pathname)
+    else useScene.setState({ paused: true })
+  }, [pathname, isDesktop])
 
   // SPA navigation: move focus to the new page so its title is read next
   useEffect(() => {
@@ -57,9 +80,20 @@ export function AppShell() {
         ))}
       </nav>
 
-      <main className={s.main} data-surface="light" id="main" ref={mainRef} tabIndex={-1}>
-        <Outlet />
-      </main>
+      <div className={s.contentCell}>
+        {isDesktop && <SceneMount />}
+        <main
+          className={[s.main, stationForPath(pathname) === null && s.mainOpaque]
+            .filter(Boolean)
+            .join(' ')}
+          data-surface="light"
+          id="main"
+          ref={mainRef}
+          tabIndex={-1}
+        >
+          <Outlet />
+        </main>
+      </div>
 
       <nav className={s.bottomNav} data-surface="dark" aria-label="Destinations">
         {MOBILE_NAV.map((d) =>
