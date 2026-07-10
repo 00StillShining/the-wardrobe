@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShell } from './layouts/AppShell'
 import { OnboardingGate, RequireSession } from './backend'
 import {
+  BoardEditorPage,
   CollectionPage,
   ImportPage,
   InsightsPage,
@@ -45,6 +46,7 @@ export const router = createBrowserRouter([
       { path: 'outfits/new', element: <OutfitStudioPage /> },
       { path: 'outfits/:outfitId', element: <OutfitStudioPage /> },
       { path: 'style', element: <StylePage /> },
+      { path: 'style/:boardId', element: <BoardEditorPage /> },
       { path: 'insights', element: <InsightsPage /> },
       { path: 'import', element: <ImportPage /> },
       { path: 'settings/*', element: <SettingsPage /> },

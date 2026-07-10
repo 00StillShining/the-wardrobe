@@ -1,0 +1,138 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+.saveState {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+  padding-bottom: var(--space-2);
+}
+
+.canvasWrap {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  overflow: auto;
+  background: var(--surface-raised);
+  /* touch drag edits elements; the page must not scroll underneath */
+  touch-action: none;
+}
+
+.commandRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.zoomGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.zoomLabel {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+  min-width: 44px;
+  text-align: center;
+}
+
+.selectedRow {
+  display: flex;
+  align-items: end;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--surface-raised);
+}
+
+.selectedKind {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+  padding-bottom: var(--space-2);
+  min-width: 64px;
+}
+
+.tray {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.trayBtn {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--surface-raised);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-s);
+  cursor: pointer;
+}
+
+.trayBtn:hover {
+  background: var(--hover-veil);
+}
+
+.swatchBtn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  cursor: pointer;
+}
+
+/* —— boards grid —— */
+
+.boardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+
+.boardCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: var(--text);
+}
+
+.boardCover {
+  aspect-ratio: 4 / 3;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.boardCover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.boardTitle {
+  font-family: var(--font-serif);
+  font-weight: 550;
+  font-size: var(--text-l);
+}
+
+.boardMeta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}

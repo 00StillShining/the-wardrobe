@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Palette } from 'lucide-react'
 import s from './placeholders.module.css'
 import { DESTINATIONS } from '../nav'
-import { Button, EmptyState, InlineError, Tabs, TextField } from '../../shared/ui'
+import { Button, InlineError, Tabs, TextField } from '../../shared/ui'
 import { useBackend } from '../backend'
 import { CollectionView } from '../../features/collection/CollectionView'
 import { ItemDetail } from '../../features/collection/ItemDetail'
@@ -12,6 +11,8 @@ import { ImportFlow } from '../../features/import/ImportFlow'
 import { InsightsView } from '../../features/insights/InsightsView'
 import { OutfitsList } from '../../features/outfits/OutfitsList'
 import { OutfitStudio } from '../../features/outfits/OutfitStudio'
+import { BoardsList } from '../../features/style/BoardsList'
+import { BoardEditor } from '../../features/style/BoardEditor'
 
 function PageHead({ title, job, phase }: { title: string; job: string; phase: string }) {
   return (
@@ -102,13 +103,25 @@ export function StylePage() {
   return (
     <div className={s.workspacePane}>
       <section className={s.workspace}>
-        <PageHead title="Style Studio" job="Create editorial boards and exports." phase="Phase 7" />
-        <EmptyState
-          figure={<Palette aria-hidden />}
-          title="No boards yet"
-          hint="Boards compose cutouts, swatches and captions on a linen canvas, then export at print resolution."
-          action={<Button disabled>New board</Button>}
-        />
+        <header className={s.head}>
+          <h1 className={s.title}>Style Studio</h1>
+          <p className={s.job}>Create editorial boards and exports.</p>
+        </header>
+        <BoardsList />
+      </section>
+    </div>
+  )
+}
+
+export function BoardEditorPage() {
+  return (
+    <div className={s.workspacePane}>
+      <section className={s.workspace}>
+        <header className={s.head}>
+          <h1 className={s.title}>Style Studio</h1>
+          <p className={s.job}>Drag, resize, rotate — autosaved as a document, exported as an image.</p>
+        </header>
+        <BoardEditor />
       </section>
     </div>
   )
