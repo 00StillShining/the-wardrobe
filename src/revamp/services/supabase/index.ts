@@ -11,6 +11,9 @@ import { SupabaseProfileRepository } from './profiles'
 import { SupabaseWardrobeRepository } from './wardrobe'
 import { SupabaseItemImageRepository } from './itemImages'
 import { SupabaseImportJobRepository } from './importJobs'
+import { SupabaseOutfitRepository } from './outfits'
+import { SupabaseStyleBoardRepository } from './styleBoards'
+import { SupabaseWearRepository } from './wear'
 import { SupabaseMediaService } from './media'
 
 export interface SupabaseBackendConfig {
@@ -27,6 +30,9 @@ export const createSupabaseBackend = (config: SupabaseBackendConfig): Backend =>
     wardrobe: new SupabaseWardrobeRepository(client),
     itemImages: new SupabaseItemImageRepository(client),
     importJobs: new SupabaseImportJobRepository(client),
+    outfits: new SupabaseOutfitRepository(client),
+    styleBoards: new SupabaseStyleBoardRepository(client),
+    wear: new SupabaseWearRepository(client),
     media: new SupabaseMediaService(client),
   }
 }
@@ -36,4 +42,7 @@ export { SupabaseProfileRepository } from './profiles'
 export { SupabaseWardrobeRepository } from './wardrobe'
 export { SupabaseItemImageRepository } from './itemImages'
 export { SupabaseImportJobRepository } from './importJobs'
+export { SupabaseOutfitRepository } from './outfits'
+export { SupabaseStyleBoardRepository } from './styleBoards'
+export { SupabaseWearRepository } from './wear'
 export { SupabaseMediaService } from './media'

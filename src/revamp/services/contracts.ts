@@ -401,5 +401,8 @@ export interface Backend {
   wardrobe: WardrobeRepository
   itemImages: ItemImageRepository
   importJobs: ImportJobRepository
+  outfits: OutfitRepository
+  styleBoards: StyleBoardRepository
+  wear: WearRepository
   media: MediaService
 }

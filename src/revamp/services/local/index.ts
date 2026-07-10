@@ -10,6 +10,9 @@ import { LocalProfileRepository } from './profiles'
 import { LocalWardrobeRepository } from './wardrobe'
 import { LocalItemImageRepository } from './itemImages'
 import { LocalImportJobRepository } from './importJobs'
+import { LocalOutfitRepository } from './outfits'
+import { LocalStyleBoardRepository } from './styleBoards'
+import { LocalWearRepository } from './wear'
 import { LocalMediaService } from './media'
 import type { LocalClock } from './shared'
 import { browserBlobStore, browserKeyValueStore, type BlobStore, type KeyValueStore } from './stores'
@@ -32,6 +35,9 @@ export const createLocalBackend = (options: LocalBackendOptions = {}): Backend =
     wardrobe: new LocalWardrobeRepository(kv, clock),
     itemImages: new LocalItemImageRepository(kv, clock),
     importJobs: new LocalImportJobRepository(kv, clock),
+    outfits: new LocalOutfitRepository(kv, clock),
+    styleBoards: new LocalStyleBoardRepository(kv, clock),
+    wear: new LocalWearRepository(kv, clock),
     media: new LocalMediaService(blobs),
   }
 }
@@ -41,6 +47,9 @@ export { LocalProfileRepository } from './profiles'
 export { LocalWardrobeRepository } from './wardrobe'
 export { LocalItemImageRepository } from './itemImages'
 export { LocalImportJobRepository } from './importJobs'
+export { LocalOutfitRepository } from './outfits'
+export { LocalStyleBoardRepository } from './styleBoards'
+export { LocalWearRepository } from './wear'
 export { LocalMediaService } from './media'
 export { LOCAL_USER_ID, NAMESPACE } from './shared'
 export type { BlobStore, KeyValueStore } from './stores'
