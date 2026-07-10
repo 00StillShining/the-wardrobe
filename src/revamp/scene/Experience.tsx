@@ -1,6 +1,7 @@
 import { ContactShadows } from '@react-three/drei'
 import { Cabinet } from './cabinet/Cabinet'
 import { CameraRig } from './CameraRig'
+import { RailGarments } from './garments/RailGarments'
 import { useGreyboxMaterials } from './cabinet/materials'
 
 function Room() {
@@ -48,6 +49,7 @@ export function Experience() {
 
       <Room />
       <Cabinet />
+      <RailGarments />
       <ContactShadows position={[0, 0.002, 1.2]} opacity={0.45} blur={2.2} scale={7} frames={40} resolution={256} />
       <CameraRig />
     </>

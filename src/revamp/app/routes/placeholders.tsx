@@ -7,6 +7,7 @@ import { Button, EmptyState, InlineError, Tabs, TextField } from '../../shared/u
 import { useBackend } from '../backend'
 import { CollectionView } from '../../features/collection/CollectionView'
 import { ItemDetail } from '../../features/collection/ItemDetail'
+import { SeedControls } from '../../features/collection/SeedControls'
 import { ImportFlow } from '../../features/import/ImportFlow'
 
 function PageHead({ title, job, phase }: { title: string; job: string; phase: string }) {
@@ -130,7 +131,16 @@ const SETTINGS_TABS = [
   { id: 'profile', label: 'Profile', content: <p className={s.settingsNote}>Display name, currency and locale — Phase 9.</p> },
   { id: 'preferences', label: 'Preferences', content: <p className={s.settingsNote}>Reduced motion and 3D quality — applied instantly, persisted per account.</p> },
   { id: 'connections', label: 'Connections', content: <p className={s.settingsNote}>Email receipt import appears here only when a provider is configured. Nothing is simulated.</p> },
-  { id: 'data', label: 'Data', content: <p className={s.settingsNote}>Storage usage, full export, and account deletion — Phase 9.</p> },
+  {
+    id: 'data',
+    label: 'Data',
+    content: (
+      <div className={s.settingsStack}>
+        <p className={s.settingsNote}>Storage usage, full export, and account deletion — Phase 9.</p>
+        <SeedControls />
+      </div>
+    ),
+  },
 ]
 
 export function SettingsPage() {

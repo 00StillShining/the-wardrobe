@@ -13,6 +13,157 @@
   flex-wrap: wrap;
 }
 
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.filterRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-3);
+}
+
+.activeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) 0;
+  border-top: 1px solid var(--line);
+}
+
+.activeSummary {
+  font-size: var(--text-s);
+  color: var(--text-muted);
+}
+
+/* —— virtualized layouts —— */
+
+.gridRow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+}
+
+.listRowWrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.listRow {
+  display: grid;
+  grid-template-columns: 48px 2fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text);
+  font-size: var(--text-m);
+  cursor: pointer;
+}
+
+.listRow:hover {
+  background: var(--hover-veil);
+}
+
+.listRow[data-selected] {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.listRow .tileImage {
+  width: 48px;
+}
+
+.listName {
+  font-weight: 500;
+}
+
+.listMeta {
+  color: var(--text-muted);
+  font-size: var(--text-s);
+}
+
+.rail {
+  overflow-x: auto;
+  height: 320px;
+  padding-bottom: var(--space-2);
+}
+
+.railCell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 172px;
+}
+
+.tileRail {
+  width: 172px;
+}
+
+/* —— selection —— */
+
+.tile[data-selected] .tileImage {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.selectMark {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-s);
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface-raised);
+}
+
+.selectMark[data-checked] {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.bulkBar {
+  position: sticky;
+  bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  background: var(--room-raised);
+  color: var(--linen-bright);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-overlay);
+  z-index: var(--z-sticky);
+}
+
+.bulkCount {
+  font-size: var(--text-s);
+  font-weight: 500;
+  margin-right: var(--space-2);
+}
+
+.noImage {
+  color: var(--text-muted);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -20,12 +171,20 @@
 }
 
 .tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   text-decoration: none;
   color: var(--text);
   border-radius: var(--radius-m);
+  /* the tile is a <button> in select mode */
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .tileImage {
