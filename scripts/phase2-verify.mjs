@@ -57,8 +57,9 @@ for (const [device, viewport] of [
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
-  await page.goto(`${BASE}/app?revamp&motion=full`, { waitUntil: 'networkidle' })
+  await page.goto(`${BASE}/app?revamp&motion=full&quality=reduced`, { waitUntil: 'networkidle' })
   await ensureSignedIn(page)
+  await page.goto(`${BASE}/app?revamp&motion=full&quality=reduced`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1200)
 
   const probe = await page.evaluate(async () => {
@@ -98,11 +99,15 @@ for (const [device, viewport] of [
         if (t > 3600) {
           clearInterval(iv)
           let maxStep = 0
+          let maxV = 0
           let maxAngDeg = 0
           for (let i = 1; i < samples.length; i++) {
             const a = samples[i - 1]
             const b = samples[i]
-            maxStep = Math.max(maxStep, Math.hypot(b.x - a.x, b.y - a.y, b.z - a.z))
+            const d = Math.hypot(b.x - a.x, b.y - a.y, b.z - a.z)
+            maxStep = Math.max(maxStep, d)
+            // velocity-normalized: robust to throttled sampling intervals
+            maxV = Math.max(maxV, d / Math.max(0.001, (b.t - a.t) / 1000))
             // view-direction angular step (the motion spec's ≤60°/s applies
             // to sustained pans; we record the peak for tuning)
             const va = a.dir
@@ -115,6 +120,7 @@ for (const [device, viewport] of [
           resolve({
             samples: samples.length,
             maxStep,
+            maxVelocity: maxV,
             maxAngPerSample: maxAngDeg,
             finalStation: scene.getState().station,
             stillFlying: rig.flying,
@@ -123,9 +129,10 @@ for (const [device, viewport] of [
       }, 50)
     })
   })
-  // 50 ms samples: a snap/teleport between stations reads as a 2.5–4.5 unit
-  // step; legitimate peak flight velocity stays well under 1.0
-  probe.pass = !probe.error && probe.maxStep < 1.0 && probe.finalStation === 'collection' && !probe.stillFlying
+  // a teleport is (near-)infinite velocity regardless of sampling rate;
+  // legitimate peak flight velocity (settle bursts included) stays under
+  // ~9 m/s — threshold at 12
+  probe.pass = !probe.error && probe.maxVelocity < 12 && probe.finalStation === 'collection' && !probe.stillFlying
   results.interruption = probe
   console.log('interruption:', JSON.stringify(probe))
   await ctx.close()

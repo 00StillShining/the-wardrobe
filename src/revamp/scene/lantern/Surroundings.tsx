@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
+import { MeshReflectorMaterial } from '@react-three/drei'
 import { LAN } from './dims'
 import { useLanternMaterials } from './materials'
+import { useScene } from '../../stores/scene'
 
 /**
  * The reference room: warm-grey wall, pale floor, flat woven rug, a raking
@@ -38,6 +40,38 @@ function useLightPatch(): THREE.CanvasTexture {
   }, [])
 }
 
+function LeaningMirror({ frame, fallback }: { frame: THREE.Material; fallback: THREE.Material }) {
+  const quality = useScene((s) => s.quality)
+  return (
+    <group position={[LAN.mirrorX, 0, 0.45]} rotation={[-0.075, 0.18, 0]}>
+      <mesh material={frame} position={[0, 0.95, 0]} castShadow>
+        <boxGeometry args={[0.62, 1.9, 0.03]} />
+      </mesh>
+      {quality === 'reduced' ? (
+        <mesh material={fallback} position={[0, 0.95, 0.017]}>
+          <boxGeometry args={[0.56, 1.84, 0.006]} />
+        </mesh>
+      ) : (
+        <mesh position={[0, 0.95, 0.02]}>
+          <planeGeometry args={[0.56, 1.84]} />
+          <MeshReflectorMaterial
+            mirror={0.9}
+            resolution={512}
+            blur={[160, 40]}
+            mixBlur={0.55}
+            mixStrength={1.4}
+            depthScale={0.25}
+            minDepthThreshold={0.6}
+            color="#d2d6da"
+            metalness={0.45}
+            roughness={0.35}
+          />
+        </mesh>
+      )}
+    </group>
+  )
+}
+
 export function Surroundings() {
   const m = useLanternMaterials()
   const patch = useLightPatch()
@@ -69,15 +103,9 @@ export function Surroundings() {
         <boxGeometry args={[4.4, 0.012, 2.4]} />
       </mesh>
 
-      {/* leaning mirror — Outfit Studio */}
-      <group position={[LAN.mirrorX, 0, 0.45]} rotation={[-0.075, 0.18, 0]}>
-        <mesh material={m.brass} position={[0, 0.95, 0]} castShadow>
-          <boxGeometry args={[0.62, 1.9, 0.03]} />
-        </mesh>
-        <mesh material={m.mirror} position={[0, 0.95, 0.017]}>
-          <boxGeometry args={[0.56, 1.84, 0.006]} />
-        </mesh>
-      </group>
+      {/* leaning mirror — Outfit Studio. A REAL planar reflection (one
+          extra render pass); reduced quality keeps the cheap glass. */}
+      <LeaningMirror frame={m.brass} fallback={m.mirror} />
 
       {/* wall-mounted brass post tray — Add / Import */}
       <group position={[LAN.trayX, LAN.trayY, 0.12]}>

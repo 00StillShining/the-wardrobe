@@ -138,8 +138,16 @@
 
 /* —— route entrance: the 2D answer to the camera settle —— */
 .routeIn {
+  /* flex chain keeps percentage heights resolving for page roots */
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
   animation: routeIn 340ms var(--ease-ui);
+}
+
+.routeIn > * {
+  flex: 1 0 auto;
+  width: 100%;
 }
 
 @keyframes routeIn {

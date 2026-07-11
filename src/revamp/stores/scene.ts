@@ -33,6 +33,12 @@ interface SceneState {
 
 const now = () => performance.now() / 1000
 
+function resolveQuality(): SceneQuality {
+  if (typeof window === 'undefined') return 'auto'
+  const q = new URLSearchParams(window.location.search).get('quality')
+  return q === 'high' || q === 'reduced' || q === 'auto' ? q : 'auto'
+}
+
 function resolveFullMotion(): boolean {
   if (typeof window === 'undefined') return true
   const override = new URLSearchParams(window.location.search).get('motion')
@@ -53,7 +59,7 @@ export const useScene = create<SceneState>((set, get) => ({
   fullMotion: resolveFullMotion(),
   cutSerial: 0,
   paused: false,
-  quality: 'auto',
+  quality: resolveQuality(),
 
   routeChanged: (pathname) => {
     const target = stationForPath(pathname)
