@@ -1,67 +1,63 @@
 import { Suspense } from 'react'
 import { ContactShadows, Environment, Lightformer } from '@react-three/drei'
-import { Cabinet } from './cabinet/Cabinet'
+import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
+import { Lantern } from './lantern/Lantern'
+import { Surroundings } from './lantern/Surroundings'
 import { CameraRig } from './CameraRig'
 import { RailGarments } from './garments/RailGarments'
-import { useGreyboxMaterials } from './cabinet/materials'
-
-function Room() {
-  const m = useGreyboxMaterials()
-  return (
-    <group>
-      <mesh material={m.floor} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 2.4]} receiveShadow>
-        <planeGeometry args={[14, 10]} />
-      </mesh>
-      <mesh material={m.wall} position={[0, 2.2, -0.02]} receiveShadow>
-        <planeGeometry args={[14, 5.2]} />
-      </mesh>
-    </group>
-  )
-}
+import { useScene } from '../stores/scene'
 
 /**
- * Grey-box lighting: neutral soft daylight for shape, one warm key that
- * casts, floor bounce fill. Post-processing waits for final materials —
- * light before texture (grey-box gate).
+ * Scene v2 — the Lantern in a daylit room (scene-v2-lantern.md): soft
+ * directional daylight with one shadow pass, sky ambient, interior warm
+ * glow, restrained bloom that sells the linen transmission. No motion
+ * blur, no flares; reduced quality drops post-processing.
  */
 export function Experience() {
+  const quality = useScene((s) => s.quality)
+
   return (
     <>
-      <color attach="background" args={['#1d1c19']} />
-      <fog attach="fog" args={['#1d1c19', 7, 14]} />
+      <color attach="background" args={['#77756c']} />
+      <fog attach="fog" args={['#77756c', 9, 18]} />
 
-      {/* physical falloff (decay 2) — intensities sized for ~3-5 m throws */}
-      <hemisphereLight args={['#cfd4d8', '#2a2723', 0.9]} />
-      <ambientLight intensity={0.22} color="#e8e4da" />
-      <spotLight
-        position={[-3.2, 3.6, 4.6]}
-        angle={0.6}
-        penumbra={0.8}
-        intensity={340}
-        color="#ffe9cf"
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0004}
-      />
-      {/* warm practical lighting the cabinet front + open-door faces */}
-      <pointLight position={[0, 1.7, 2.5]} intensity={46} color="#ffd9a8" />
-      {/* cool fill from the right so ebonized panels keep shape */}
-      <pointLight position={[2.6, 1.5, 3.4]} intensity={64} color="#d8e0e8" />
-
-      {/* procedural environment — no network HDRI; brass/mirror need it to read */}
       <Environment resolution={64} frames={1}>
-        <Lightformer intensity={1.1} position={[0, 4, 3]} rotation={[-Math.PI / 2, 0, 0]} scale={[7, 5, 1]} color="#e8ecef" />
-        <Lightformer intensity={0.7} position={[-4, 1.6, 2]} rotation={[0, Math.PI / 2, 0]} scale={[4, 2.4, 1]} color="#ffe4c0" />
-        <Lightformer intensity={0.5} position={[4, 1.4, 2.5]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 2, 1]} color="#cfd8e0" />
+        <Lightformer intensity={1.3} position={[0, 5, 4]} rotation={[-Math.PI / 2, 0, 0]} scale={[9, 6, 1]} color="#eef1f2" />
+        <Lightformer intensity={0.8} position={[5, 2.2, 3]} rotation={[0, -Math.PI / 2, 0]} scale={[5, 3, 1]} color="#fff0d8" />
+        <Lightformer intensity={0.45} position={[-5, 1.8, 2]} rotation={[0, Math.PI / 2, 0]} scale={[4, 2.5, 1]} color="#dfe5e8" />
       </Environment>
 
-      <Room />
+      {/* daylight key — raking from the right like the references */}
+      <directionalLight
+        position={[4.5, 3.6, 3.2]}
+        intensity={2.4}
+        color="#fff1dc"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0003}
+        shadow-camera-left={-4}
+        shadow-camera-right={4}
+        shadow-camera-top={4}
+        shadow-camera-bottom={-1}
+      />
+      <hemisphereLight args={['#e2e6e8', '#8b877c', 0.75]} />
+      <ambientLight intensity={0.18} color="#f0eee8" />
+
+      <Surroundings />
       <Suspense fallback={null}>
-        <Cabinet />
+        <Lantern />
       </Suspense>
       <RailGarments />
-      <ContactShadows position={[0, 0.002, 1.2]} opacity={0.45} blur={2.2} scale={7} frames={40} resolution={256} />
+
+      <ContactShadows position={[0, 0.004, 1.1]} opacity={0.38} blur={2.6} scale={8} frames={40} resolution={256} far={2.2} />
       <CameraRig />
+
+      {quality !== 'reduced' && (
+        <EffectComposer multisampling={2}>
+          <Bloom intensity={0.32} luminanceThreshold={0.92} luminanceSmoothing={0.25} mipmapBlur />
+          <Vignette eskil={false} offset={0.18} darkness={0.55} />
+        </EffectComposer>
+      )}
     </>
   )
 }

@@ -17,6 +17,8 @@ interface SceneState {
   /** deep-linked/first destination consumed by _arrive() after the door ritual */
   pendingStation: StationId | null
   drawerOpen: boolean
+  /** the golden cane panel slides open for Style Studio */
+  caneOpen: boolean
   fullMotion: boolean
   /** bumps on every reduced-motion cut — the shell shows a 300 ms veil */
   cutSerial: number
@@ -47,6 +49,7 @@ export const useScene = create<SceneState>((set, get) => ({
   tDoors: 0,
   pendingStation: null,
   drawerOpen: false,
+  caneOpen: false,
   fullMotion: resolveFullMotion(),
   cutSerial: 0,
   paused: false,
@@ -84,6 +87,7 @@ export const useScene = create<SceneState>((set, get) => ({
       station: target,
       tStation: now(),
       drawerOpen: target === 'insights',
+      caneOpen: target === 'style',
       cutSerial: s.fullMotion ? s.cutSerial : s.cutSerial + 1,
     })
   },
@@ -95,6 +99,7 @@ export const useScene = create<SceneState>((set, get) => ({
       pendingStation: null,
       doorPhase: 'open',
       drawerOpen: station === 'insights',
+      caneOpen: station === 'style',
       cutSerial: s.fullMotion ? s.cutSerial : s.cutSerial + 1,
     }))
   },

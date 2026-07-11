@@ -22,15 +22,14 @@ export interface Station {
   onDoor?: boolean
 }
 
+/** Lantern framings (scene-v2-lantern.md): frontal, formal, reference-like. */
 export const STATIONS: Record<StationId, Station> = {
-  overview: { id: 'overview', pos: { x: 0.55, y: 1.42, z: 4.15 }, tgt: { x: 0, y: 1.2, z: 0.4 } },
-  collection: { id: 'collection', pos: { x: -0.2, y: 1.45, z: 4.4 }, tgt: { x: -0.25, y: 1.2, z: 0.4 } },
-  // door-surface targets sit at the OPEN door centres (hinge ±1.09, 107°):
-  // centre ≈ (±1.22, 1.2, 1.03) — computed in cabinet-plan.md geometry
-  outfits: { id: 'outfits', pos: { x: 1.0, y: 1.4, z: 4.2 }, tgt: { x: -1.22, y: 1.15, z: 1.03 }, onDoor: true },
-  style: { id: 'style', pos: { x: -1.0, y: 1.4, z: 4.2 }, tgt: { x: 1.22, y: 1.18, z: 1.03 }, onDoor: true },
-  insights: { id: 'insights', pos: { x: 0.3, y: 1.55, z: 2.75 }, tgt: { x: -0.3, y: 0.48, z: 0.5 } },
-  import: { id: 'import', pos: { x: -0.45, y: 1.3, z: 2.65 }, tgt: { x: -1.31, y: 0.98, z: 0.45 } },
+  overview: { id: 'overview', pos: { x: 0.35, y: 1.32, z: 5.0 }, tgt: { x: 0, y: 1.26, z: 0.35 } },
+  collection: { id: 'collection', pos: { x: 0.05, y: 1.38, z: 3.3 }, tgt: { x: 0, y: 1.3, z: 0.32 } },
+  outfits: { id: 'outfits', pos: { x: 0.7, y: 1.28, z: 3.7 }, tgt: { x: -1.8, y: 1.2, z: 0.5 }, onDoor: true },
+  style: { id: 'style', pos: { x: -0.9, y: 1.32, z: 3.5 }, tgt: { x: 1.38, y: 1.28, z: 0.42 }, onDoor: true },
+  insights: { id: 'insights', pos: { x: 0.65, y: 1.2, z: 2.4 }, tgt: { x: 0, y: 0.25, z: 0.78 } },
+  import: { id: 'import', pos: { x: -0.5, y: 1.28, z: 3.1 }, tgt: { x: 2.0, y: 1.18, z: 0.12 } },
 }
 
 /** Route prefix → station. Longest match wins (settings/fixtures have no station). */
