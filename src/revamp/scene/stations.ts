@@ -28,7 +28,7 @@ export const STATIONS: Record<StationId, Station> = {
   collection: { id: 'collection', pos: { x: 0.05, y: 1.38, z: 3.3 }, tgt: { x: 0, y: 1.3, z: 0.32 } },
   outfits: { id: 'outfits', pos: { x: 0.7, y: 1.28, z: 3.7 }, tgt: { x: -1.8, y: 1.2, z: 0.5 }, onDoor: true },
   style: { id: 'style', pos: { x: -0.9, y: 1.32, z: 3.5 }, tgt: { x: 1.38, y: 1.28, z: 0.42 }, onDoor: true },
-  insights: { id: 'insights', pos: { x: 0.65, y: 1.2, z: 2.4 }, tgt: { x: 0, y: 0.25, z: 0.78 } },
+  insights: { id: 'insights', pos: { x: 0.6, y: 1.25, z: 2.5 }, tgt: { x: -0.05, y: 0.22, z: 0.95 } },
   import: { id: 'import', pos: { x: -0.5, y: 1.28, z: 3.1 }, tgt: { x: 2.0, y: 1.18, z: 0.12 } },
 }
 

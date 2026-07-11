@@ -21,13 +21,13 @@ export const LAN = {
   caneDur: 1.1,
   caneLag: 0.15,
   cameraDepartDelay: 0.25,
-  glowRamp: 0.4,
+  glowRamp: 0.65,
 
   railY: 1.62,
   drawerY: 0.055,
   drawerH: 0.08,
-  drawerTravel: 0.4,
-  drawerDur: 0.9,
+  drawerTravel: 0.62,
+  drawerDur: 1.1,
 
   mirrorX: -1.85,
   trayX: 2.0,

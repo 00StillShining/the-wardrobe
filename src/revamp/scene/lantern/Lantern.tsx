@@ -69,18 +69,19 @@ export function Lantern() {
       const k = clamp01((t - Math.max(s.tStation, s.tDoors) - LAN.caneLag) / LAN.caneDur)
       const target = wantOpen ? settle(k, 0.03) * LAN.caneSlide : (1 - easeCamera(k)) * LAN.caneSlide
       cane.current.position.x = s.fullMotion ? (k >= 1 ? (wantOpen ? LAN.caneSlide : 0) : target) : wantOpen ? LAN.caneSlide : 0
+      cane.current.position.z = s.fullMotion ? easeCamera(clamp01(k * 3)) * (wantOpen ? 0.018 : 0) : 0
     }
 
     // drawer glides for Insights
     if (drawer.current) {
       const k = clamp01((t - s.tStation) / LAN.drawerDur)
-      const offset = s.drawerOpen ? settle(k, 0.04) * LAN.drawerTravel : (1 - easeCamera(k)) * LAN.drawerTravel
+      const offset = s.drawerOpen ? settle(k, 0.055) * LAN.drawerTravel : (1 - easeCamera(k)) * LAN.drawerTravel
       const rest = s.drawerOpen ? LAN.drawerTravel : 0
       drawer.current.position.z = s.fullMotion ? (k >= 1 ? rest : offset) : rest
     }
 
     // interior glow: baseline lantern glow, blooming with the entry
-    const glowK = s.doorPhase === 'closed' ? 0.7 : 0.7 + 0.3 * easeCamera(clamp01((t - s.tDoors) / LAN.glowRamp))
+    const glowK = s.doorPhase === 'closed' ? 0.7 : 0.7 + 0.3 * settle(clamp01((t - s.tDoors) / LAN.glowRamp), 0.12)
     const breathe = s.fullMotion ? 1 + Math.sin((t * Math.PI * 2) / 9) * 0.02 : 1
     if (glowA.current) glowA.current.intensity = 1.3 * glowK * breathe
     if (glowB.current) glowB.current.intensity = 1.7 * glowK * breathe
@@ -250,6 +251,10 @@ export function Lantern() {
         </mesh>
         <mesh material={m.brass} position={[0, 0, 0.278]}>
           <boxGeometry args={[0.14, 0.016, 0.01]} />
+        </mesh>
+        <mesh position={[-0.3, LAN.drawerH / 2 + 0.004, -0.05]} rotation={[0, -0.18, 0]}>
+          <boxGeometry args={[0.21, 0.004, 0.15]} />
+          <meshStandardMaterial color="#efe7d3" roughness={0.9} />
         </mesh>
       </group>
     </group>
