@@ -30,8 +30,8 @@ export const LAN = {
   drawerDur: 1.1,
 
   mirrorX: -1.85,
-  trayX: 2.0,
-  trayY: 1.15,
+  trayX: 1.62,
+  trayY: 1.05,
 } as const
 
 const left = -LAN.w / 2

@@ -16,8 +16,9 @@
   --oak-deep: #a3854f;       /* oak grain shadow */
   --ebonized: #232323;       /* ebonized timber, tile mid */
   --ebonized-deep: #141414;  /* tile darkest band */
-  --linen: #ddd2bc;          /* warm tailoring linen, tile median band */
-  --linen-raised: #ece5d5;   /* cleaner reading surface, tile light band */
+  --linen: #e4dccb;          /* workspace base — lifted off tan toward clean ivory (MJ frames read brighter, less brown) */
+  --linen-raised: #f2ede0;   /* the lightest reading plane — cards, inputs, hero panels */
+  --linen-sunken: #d8ccb4;   /* recessed wells only (never the page field) */
   --brass: #a2823f;          /* aged brass — hue held at 40°, sat controlled */
   --brass-bright: #c9a967;   /* catch-light brass, large text / dark surfaces only */
   --bottle: #2e4636;         /* bottle-green wool, lifted from tile for UI */
@@ -34,7 +35,7 @@
   --linen-dim: #b3ac97;      /* secondary text on dark — ≥4.5:1 on room */
 
   /* —— lines —— */
-  --line-light: #c3b795;     /* hairlines on linen */
+  --line-light: #c6ad78;     /* brass hairlines on linen — the MJ frames rule everything in gold */
   --line-dark: #3b382f;      /* hairlines on charcoal */
 
   /* —— type —— */

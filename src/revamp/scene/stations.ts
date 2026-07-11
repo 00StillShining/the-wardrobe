@@ -22,14 +22,27 @@ export interface Station {
   onDoor?: boolean
 }
 
-/** Lantern framings (scene-v2-lantern.md): frontal, formal, reference-like. */
+/**
+ * Lantern framings — redesigned to the Midjourney desktop-layout frames:
+ * frontal, formal, gallery-lit. Positions are authored full-frame; the rig
+ * view-offsets each into the visible left 62% when the workspace is open, so
+ * the hero object lands centred in the pane rather than the full window.
+ */
 export const STATIONS: Record<StationId, Station> = {
-  overview: { id: 'overview', pos: { x: 0.35, y: 1.32, z: 5.0 }, tgt: { x: 0, y: 1.26, z: 0.35 } },
-  collection: { id: 'collection', pos: { x: 0.05, y: 1.38, z: 3.3 }, tgt: { x: 0, y: 1.3, z: 0.32 } },
-  outfits: { id: 'outfits', pos: { x: 0.7, y: 1.28, z: 3.7 }, tgt: { x: -1.8, y: 1.2, z: 0.5 }, onDoor: true },
-  style: { id: 'style', pos: { x: -0.9, y: 1.32, z: 3.5 }, tgt: { x: 1.38, y: 1.28, z: 0.42 }, onDoor: true },
-  insights: { id: 'insights', pos: { x: 0.6, y: 1.25, z: 2.5 }, tgt: { x: -0.05, y: 0.22, z: 0.95 } },
-  import: { id: 'import', pos: { x: -0.5, y: 1.28, z: 3.1 }, tgt: { x: 2.0, y: 1.18, z: 0.12 } },
+  // hero: the whole lantern, generous, straight-on (master-style frame)
+  overview: { id: 'overview', pos: { x: 0.2, y: 1.34, z: 5.15 }, tgt: { x: -0.15, y: 1.28, z: 0.35 } },
+  // gallery rhythm: straight-on across the wardrobe, pulled back so the
+  // bright bay reads as one lit panel among the linen (desktop-collection)
+  collection: { id: 'collection', pos: { x: -0.1, y: 1.4, z: 4.35 }, tgt: { x: -0.15, y: 1.3, z: 0.4 } },
+  // formal hero: full leaning mirror with room to breathe (desktop-outfit)
+  outfits: { id: 'outfits', pos: { x: -1.45, y: 1.24, z: 3.7 }, tgt: { x: -1.86, y: 1.02, z: 0.45 }, onDoor: true },
+  // frontal on the golden cane slide, centred with breathing room
+  style: { id: 'style', pos: { x: 0.6, y: 1.32, z: 3.75 }, tgt: { x: 0.9, y: 1.22, z: 0.42 }, onDoor: true },
+  // ledger view: closer, steeper look-down so the felt + ruler fill the
+  // frame and the floor drops away (frame 05)
+  insights: { id: 'insights', pos: { x: 0.25, y: 1.5, z: 1.95 }, tgt: { x: 0.05, y: 0.08, z: 0.78 } },
+  // close on the lit tray of photos, looking slightly down (post-tray frame)
+  import: { id: 'import', pos: { x: 1.15, y: 1.5, z: 2.35 }, tgt: { x: 1.62, y: 0.98, z: 0.12 } },
 }
 
 /** Route prefix → station. Longest match wins (settings/fixtures have no station). */

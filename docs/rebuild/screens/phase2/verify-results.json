@@ -14,10 +14,10 @@
     "desktop-1280/import.png"
   ],
   "interruption": {
-    "samples": 18,
-    "maxStep": 1.4405097526587474,
-    "maxVelocity": 5.15757161799026,
-    "maxAngPerSample": 9.424472444437155,
+    "samples": 23,
+    "maxStep": 0.7789464622231251,
+    "maxVelocity": 3.8715032904498883,
+    "maxAngPerSample": 9.756864350145907,
     "finalStation": "collection",
     "stillFlying": false,
     "pass": true

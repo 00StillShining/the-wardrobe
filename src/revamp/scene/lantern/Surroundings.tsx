@@ -107,10 +107,13 @@ export function Surroundings() {
           extra render pass); reduced quality keeps the cheap glass. */}
       <LeaningMirror frame={m.brass} fallback={m.mirror} />
 
-      {/* wall-mounted brass post tray — Add / Import */}
-      <group position={[LAN.trayX, LAN.trayY, 0.12]}>
-        <mesh material={m.case} position={[0, -0.03, -0.05]}>
-          <boxGeometry args={[0.42, 0.02, 0.06]} />
+      {/* wall-mounted brass post tray with received photos — Add / Import.
+          The composition needs a subject: cream cards fanned in the tray,
+          one with an oxblood edge, lit warm (reference post-tray). */}
+      <group position={[LAN.trayX, LAN.trayY, 0.14]}>
+        {/* oak ledge behind, brass tray floor + rim rails */}
+        <mesh material={m.oak} position={[0, -0.028, -0.03]}>
+          <boxGeometry args={[0.46, 0.024, 0.09]} />
         </mesh>
         <mesh material={m.brass}>
           <boxGeometry args={[0.42, 0.008, 0.3]} />
@@ -125,6 +128,28 @@ export function Surroundings() {
             <boxGeometry args={f.s as unknown as [number, number, number]} />
           </mesh>
         ))}
+        {/* fanned cream photo cards resting in the tray */}
+        {[
+          { x: -0.08, rot: 0.12, c: '#efe7d3' },
+          { x: 0.0, rot: -0.05, c: '#f4efe3' },
+          { x: 0.09, rot: 0.2, c: '#e8dfc9' },
+        ].map((card, i) => (
+          <mesh key={i} position={[card.x, 0.012 + i * 0.004, 0.02]} rotation={[-Math.PI / 2, 0, card.rot]}>
+            <planeGeometry args={[0.16, 0.2]} />
+            <meshStandardMaterial color={card.c} roughness={0.85} side={2} />
+          </mesh>
+        ))}
+        {/* one photo with an oxblood border — the newest arrival */}
+        <mesh position={[0.02, 0.026, 0.03]} rotation={[-Math.PI / 2, 0, -0.14]}>
+          <planeGeometry args={[0.13, 0.16]} />
+          <meshStandardMaterial color="#6f2a24" roughness={0.7} side={2} />
+        </mesh>
+        <mesh position={[0.02, 0.027, 0.03]} rotation={[-Math.PI / 2, 0, -0.14]}>
+          <planeGeometry args={[0.1, 0.13]} />
+          <meshStandardMaterial color="#d8ccb4" roughness={0.85} side={2} />
+        </mesh>
+        {/* warm picture light so the tray never reads as a dark bracket */}
+        <pointLight position={[0, 0.3, 0.25]} color="#ffe2b0" intensity={2.2} distance={1.2} />
       </group>
     </group>
   )
