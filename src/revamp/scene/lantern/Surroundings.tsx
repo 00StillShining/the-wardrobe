@@ -52,6 +52,12 @@ export function Surroundings() {
         <planeGeometry args={[16, 5.6]} />
       </mesh>
 
+      {/* deep ceiling shadow band — the lantern glows against it (refs) */}
+      <mesh position={[0, 4.45, 0.008]}>
+        <planeGeometry args={[16, 2.4]} />
+        <meshBasicMaterial color="#141311" transparent opacity={0.82} depthWrite={false} />
+      </mesh>
+
       {/* raking daylight patch on the wall */}
       <mesh position={[1.3, 2.55, 0.005]}>
         <planeGeometry args={[4.6, 2.3]} />

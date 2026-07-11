@@ -3,7 +3,11 @@ import { expect, test, type Page } from '@playwright/test'
 /** Phase 7: board auto-layout, editing with autosave, reopen fidelity, export. */
 
 test.beforeEach(async ({ context }) => {
-  await context.addInitScript(() => sessionStorage.setItem('wardrobe:revamp', '1'))
+  await context.addInitScript(() => {
+    sessionStorage.setItem('wardrobe:revamp', '1')
+    // functional suite: skip 3D rendering (DOM assertions only)
+    sessionStorage.setItem('wardrobe:scene-off', '1')
+  })
 })
 
 declare global {

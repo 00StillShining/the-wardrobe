@@ -3,7 +3,11 @@ import { expect, test } from '@playwright/test'
 /** Phase 9: profile persistence, data export, sign-out. */
 
 test.beforeEach(async ({ context }) => {
-  await context.addInitScript(() => sessionStorage.setItem('wardrobe:revamp', '1'))
+  await context.addInitScript(() => {
+    sessionStorage.setItem('wardrobe:revamp', '1')
+    // functional suite: skip 3D rendering (DOM assertions only)
+    sessionStorage.setItem('wardrobe:scene-off', '1')
+  })
 })
 
 test('settings: profile saves and persists, export downloads, sign-out guards', async ({ page }) => {

@@ -136,6 +136,29 @@
   }
 }
 
+/* —— route entrance: the 2D answer to the camera settle —— */
+.routeIn {
+  min-height: 100%;
+  animation: routeIn 340ms var(--ease-ui);
+}
+
+@keyframes routeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-1.5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* —— system states —— */
 .offline {
   position: sticky;

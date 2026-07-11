@@ -6,6 +6,9 @@ const SceneCanvas = lazy(() => import('./SceneCanvas'))
 
 function webglSupported(): boolean {
   if (new URLSearchParams(window.location.search).get('scene') === 'off') return false
+  // e2e opt-out: functional suites assert DOM, not pixels — rendering the
+  // transmission scene in four parallel browsers starves the test machine
+  if (import.meta.env.DEV && sessionStorage.getItem('wardrobe:scene-off') === '1') return false
   try {
     const canvas = document.createElement('canvas')
     return !!(canvas.getContext('webgl2') ?? canvas.getContext('webgl'))

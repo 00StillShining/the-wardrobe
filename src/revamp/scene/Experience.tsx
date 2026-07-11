@@ -49,13 +49,13 @@ export function Experience() {
       </Suspense>
       <RailGarments />
 
-      <ContactShadows position={[0, 0.004, 1.1]} opacity={0.38} blur={2.6} scale={8} frames={40} resolution={256} far={2.2} />
+      <ContactShadows position={[0, 0.004, 1.1]} opacity={0.48} blur={2.6} scale={8} frames={40} resolution={256} far={2.2} />
       <CameraRig />
 
       {quality !== 'reduced' && (
         <EffectComposer multisampling={2}>
-          <Bloom intensity={0.32} luminanceThreshold={0.92} luminanceSmoothing={0.25} mipmapBlur />
-          <Vignette eskil={false} offset={0.18} darkness={0.55} />
+          <Bloom intensity={0.45} luminanceThreshold={0.9} luminanceSmoothing={0.22} mipmapBlur />
+          <Vignette eskil={false} offset={0.16} darkness={0.62} />
         </EffectComposer>
       )}
     </>

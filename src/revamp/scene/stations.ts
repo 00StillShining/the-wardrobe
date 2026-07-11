@@ -66,10 +66,10 @@ export function transitionFor(from: StationId, to: StationId): TransitionSpec {
   const fromDoor = STATIONS[from].onDoor
   const toDoor = STATIONS[to].onDoor
   if (fromDoor && toDoor) return { move: 'arc', dur: 1.35, delay: 0 }
-  if (fromDoor || toDoor) return { move: 'arc', dur: 1.2, delay: 0 }
+  if (fromDoor || toDoor) return { move: 'arc', dur: 1.15, delay: 0 }
   if (to === 'import' || from === 'import') return { move: 'pedestal', dur: 0.95, delay: 0 }
   if (to === 'overview' || from === 'overview') return { move: 'pull', dur: 1.3, delay: 0 }
-  return { move: 'dolly', dur: 1.1, delay: 0 }
+  return { move: 'dolly', dur: 1.0, delay: 0 }
 }
 
 /** Fraction of the content area the scene composes for when the workspace is open. */

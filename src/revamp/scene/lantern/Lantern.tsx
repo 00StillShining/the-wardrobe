@@ -36,7 +36,7 @@ export function Lantern() {
       if (s.fullMotion) {
         const kR = clamp01((t - s.tDoors) / LAN.doorDur)
         if (rightLeaf.current) {
-          rightLeaf.current.position.x = MOD.aRight - 0.01 - settle(kR, 0.02) * LAN.doorSlide
+          rightLeaf.current.position.x = MOD.aRight - 0.01 - settle(kR, 0.05) * LAN.doorSlide
           // the moving leaf rides just proud of the static one
           rightLeaf.current.position.z = FRONT_Z - 0.02 + easeCamera(clamp01(kR * 3)) * 0.02
         }
@@ -115,6 +115,10 @@ export function Lantern() {
         {/* the glowing linen field */}
         <mesh material={m.linenPanel} position={[cx, 0, 0]}>
           <boxGeometry args={[leafW - fr * 2, panelH - fr * 2, 0.012]} />
+        </mesh>
+        {/* mid seam — each leaf reads as two woven panels like the reference */}
+        <mesh material={m.brass} position={[cx, 0, 0.004]}>
+          <boxGeometry args={[0.006, panelH - fr * 2, 0.014]} />
         </mesh>
         {/* pull plate at the meeting stile */}
         <mesh material={m.pull} position={[(leafW - fr) * dir, -0.05, 0.02]}>

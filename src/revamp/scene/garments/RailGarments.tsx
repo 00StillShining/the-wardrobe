@@ -24,8 +24,18 @@ function GarmentPlane({ url, x, phase }: { url: string; x: number; phase: number
   useFrame(() => {
     if (!swing.current) return
     const s = useScene.getState()
+    if (!s.fullMotion) {
+      swing.current.rotation.z = 0
+      return
+    }
     const t = performance.now() / 1000
-    swing.current.rotation.z = s.fullMotion ? Math.sin((t * Math.PI * 2) / 5.2 + phase) * 0.014 : 0
+    // idle sway + a staggered, decaying brush as the camera arrives — the
+    // wardrobe acknowledges you (poppy, never restless)
+    const idle = Math.sin((t * Math.PI * 2) / 5.2 + phase) * 0.014
+    const since = t - s.tStation - phase * 0.06
+    const impulse =
+      since > 0 && since < 2.4 ? Math.exp(-since * 2.2) * Math.sin(since * 9 + phase) * 0.05 : 0
+    swing.current.rotation.z = idle + impulse
   })
 
   return (

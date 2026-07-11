@@ -7,7 +7,11 @@ import { expect, test, type Page } from '@playwright/test'
  */
 
 test.beforeEach(async ({ context }) => {
-  await context.addInitScript(() => sessionStorage.setItem('wardrobe:revamp', '1'))
+  await context.addInitScript(() => {
+    sessionStorage.setItem('wardrobe:revamp', '1')
+    // functional suite: skip 3D rendering (DOM assertions only)
+    sessionStorage.setItem('wardrobe:scene-off', '1')
+  })
 })
 
 async function signInAndOnboard(page: Page) {

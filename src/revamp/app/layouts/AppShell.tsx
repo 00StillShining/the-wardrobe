@@ -138,7 +138,10 @@ export function AppShell() {
             </div>
           )}
           <RouteErrorBoundary resetKey={pathname}>
-            <Outlet />
+            {/* workspaces glide in with the camera; reduced motion kills it */}
+            <div key={pathname} className={s.routeIn}>
+              <Outlet />
+            </div>
           </RouteErrorBoundary>
         </main>
       </div>

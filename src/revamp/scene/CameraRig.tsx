@@ -15,7 +15,7 @@ import { useScene } from '../stores/scene'
 
 const ROOM_CENTRE = new Vector3(0, 1.4, 2.2)
 const TARGET_LEAD = 0.08
-const OVERSHOOT = 0.02
+const OVERSHOOT = 0.028
 
 const now = () => performance.now() / 1000
 

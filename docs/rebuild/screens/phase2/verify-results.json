@@ -15,8 +15,8 @@
   ],
   "interruption": {
     "samples": 11,
-    "maxStep": 0.01236889058929267,
-    "maxAngPerSample": 10.059766502545672,
+    "maxStep": 0.0010069349272035092,
+    "maxAngPerSample": 10.615772729459456,
     "finalStation": "collection",
     "stillFlying": false,
     "pass": true

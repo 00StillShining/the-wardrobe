@@ -19,7 +19,7 @@ export const LAN = {
   doorLag: 0.09,
   caneSlide: 0.5,
   caneDur: 1.1,
-  caneLag: 0.15,
+  caneLag: 0.32,
   cameraDepartDelay: 0.25,
   glowRamp: 0.65,
 
